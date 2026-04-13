@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniConnect – USIU-Africa ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --usiu-blue:#003B7A;--usiu-blue-mid:#005BB5;--usiu-blue-light:#1A7FD4;
+  --usiu-gold:#C9922A;--usiu-gold-light:#F0B741;--usiu-red:#C0392B;
+  --bg:#F4F6FA;--surface:#FFFFFF;--surface2:#EEF2F8;
+  --border:#D8E0EE;--border-strong:#B8C6DE;
+  --text:#0D1F3C;--text-mid:#3A5070;--text-muted:#7A90B0;--text-dim:#AAB8CE;
+  --success:#1B7A4A;--success-bg:#E8F5EE;--warning:#B45309;--warning-bg:#FEF3C7;
+  --danger:#B91C1C;--danger-bg:#FEE2E2;--info:#1A5FAA;--info-bg:#DBEAFE;
+  --sidebar-w:260px;--topbar-h:64px;--radius:10px;
+  --shadow:0 2px 12px rgba(0,59,122,0.08);--shadow-lg:0 8px 32px rgba(0,59,122,0.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
+
+/* LOGIN */
+#loginPage{min-height:100vh;display:flex;align-items:stretch}
+.login-left{flex:1;background:linear-gradient(160deg,var(--usiu-blue) 0%,var(--usiu-blue-mid) 60%,var(--usiu-blue-light) 100%);display:flex;flex-direction:column;justify-content:center;padding:60px;position:relative;overflow:hidden}
+.login-left::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 80% 20%,rgba(201,146,42,0.18) 0%,transparent 70%),radial-gradient(ellipse 400px 600px at 10% 90%,rgba(255,255,255,0.06) 0%,transparent 60%)}
+.login-left::after{content:'';position:absolute;bottom:-100px;right:-100px;width:500px;height:500px;border:1px solid rgba(255,255,255,0.08);border-radius:50%}
+.login-brand{position:relative;z-index:1}
+.login-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:30px;padding:6px 16px 6px 6px;margin-bottom:40px}
+.login-badge .dot{width:28px;height:28px;background:var(--usiu-gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.login-badge span{color:rgba(255,255,255,0.85);font-size:12px;font-weight:500;letter-spacing:0.5px}
+.login-headline{font-family:'Playfair Display',serif;font-size:46px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:20px}
+.login-headline em{color:var(--usiu-gold-light);font-style:normal}
+.login-sub{color:rgba(255,255,255,0.65);font-size:15px;line-height:1.7;max-width:380px;margin-bottom:50px}
+.login-stats{display:flex;gap:32px;position:relative;z-index:1}
+.login-stat .num{font-family:'Playfair Display',serif;font-size:30px;color:var(--usiu-gold-light);font-weight:700}
+.login-stat .lbl{color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px}
+.login-right{width:460px;flex-shrink:0;background:var(--surface);display:flex;flex-direction:column;justify-content:center;padding:60px 50px}
+.login-form-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--usiu-blue);margin-bottom:6px}
+.login-form-sub{color:var(--text-muted);font-size:13px;margin-bottom:36px}
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:12px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-mid);margin-bottom:8px}
+.form-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);transition:border-color .2s,box-shadow .2s;outline:none}
+.form-input:focus{border-color:var(--usiu-blue-mid);box-shadow:0 0 0 3px rgba(0,91,181,0.1);background:#fff}
+.form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A90B0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--usiu-blue) 0%,var(--usiu-blue-mid) 100%);color:#fff;border:none;border-radius:var(--radius);padding:14px 24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .2s;margin-top:8px}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,59,122,0.3)}
+.demo-accounts{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.demo-title{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.demo-pills{display:flex;gap:8px;flex-wrap:wrap}
+.demo-pill{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;color:var(--text-mid);cursor:pointer;transition:background .15s,border-color .15s;font-weight:500}
+.demo-pill:hover{background:var(--info-bg);border-color:var(--usiu-blue-light);color:var(--usiu-blue)}
+.login-error{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger);border-radius:8px;padding:10px 14px;font-size:13px;margin-top:12px;display:none}
+
+/* APP SHELL */
+#appShell{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--usiu-blue);display:flex;flex-direction:column;z-index:200;overflow:hidden}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0}
+.sidebar-logo-mark{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.logo-icon{width:36px;height:36px;background:var(--usiu-gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;line-height:1}
+.logo-sub{color:rgba(255,255,255,0.45);font-size:10px;letter-spacing:0.5px;margin-top:2px}
+.sidebar-user{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.user-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.user-info .uname{font-size:13px;font-weight:600;color:#fff;line-height:1.3}
+.user-info .urole{font-size:10px;padding:1px 8px;border-radius:10px;display:inline-block;margin-top:3px;font-weight:600;letter-spacing:0.3px}
+.role-admin{background:var(--usiu-gold);color:var(--usiu-blue)}
+.role-faculty,.role-student{background:rgba(255,255,255,0.15);color:#fff}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
+.nav-section{padding:8px 20px 4px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;color:rgba(255,255,255,0.65);cursor:pointer;transition:background .15s,color .15s;font-size:13.5px;font-weight:500;position:relative}
+.nav-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+.nav-item.active{background:rgba(255,255,255,0.12);color:#fff}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--usiu-gold);border-radius:0 2px 2px 0}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--usiu-gold);color:var(--usiu-blue);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0}
+.logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.5);cursor:pointer;font-size:13px;padding:8px 0;transition:color .15s}
+.logout-btn:hover{color:#fff}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;z-index:100;gap:16px}
+.topbar-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--usiu-blue);flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 14px;width:260px}
+.topbar-search input{border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%}
+.topbar-search input::placeholder{color:var(--text-dim)}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.topbar-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-muted);transition:background .15s,border-color .15s;position:relative}
+.topbar-btn:hover{background:var(--surface2);border-color:var(--border-strong);color:var(--text)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--danger);border-radius:50%;border:1.5px solid var(--surface)}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--border)}
+.content{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);padding:32px;min-height:calc(100vh - var(--topbar-h))}
+
+/* COMPONENTS */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
+.page-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--usiu-blue);line-height:1.2}
+.page-subtitle{color:var(--text-muted);font-size:13px;margin-top:4px}
+.page-header-actions{display:flex;gap:10px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;white-space:nowrap}
+.btn-blue{background:var(--usiu-blue);color:#fff}.btn-blue:hover{background:var(--usiu-blue-mid)}
+.btn-gold{background:var(--usiu-gold);color:#fff}.btn-gold:hover{background:var(--usiu-gold-light);color:var(--usiu-blue)}
+.btn-outline{background:transparent;border-color:var(--border-strong);color:var(--text-mid)}.btn-outline:hover{background:var(--surface2)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#991B1B}
+.btn-success{background:var(--success);color:#fff}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:flex-start;gap:14px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.stat-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--usiu-blue);line-height:1}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+.stat-change{font-size:11px;margin-top:6px;font-weight:600;display:flex;align-items:center;gap:3px}
+.stat-change.up{color:var(--success)}.stat-change.down{color:var(--danger)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-title{font-size:15px;font-weight:700;color:var(--text)}
+.card-body{padding:24px}
+.card-footer{padding:14px 24px;border-top:1px solid var(--border);background:var(--surface2)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{text-align:left;padding:12px 16px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+tbody td{padding:12px 16px;color:var(--text);vertical-align:middle}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-blue{background:var(--info-bg);color:var(--info)}
+.badge-green{background:var(--success-bg);color:var(--success)}
+.badge-yellow{background:var(--warning-bg);color:var(--warning)}
+.badge-red{background:var(--danger-bg);color:var(--danger)}
+.badge-gray{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
+.avatar{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.avatar-lg{width:56px;height:56px;font-size:20px}
+.av1{background:#DBEAFE;color:#1D4ED8}.av2{background:#D1FAE5;color:#065F46}
+.av3{background:#FEF3C7;color:#92400E}.av4{background:#FCE7F3;color:#9D174D}
+.av5{background:#EDE9FE;color:#5B21B6}.av6{background:#FFEDD5;color:#9A3412}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.grid-12{display:grid;grid-template-columns:1fr 2fr;gap:20px}
+.grid-21{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.tabs{display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;margin-bottom:24px;width:fit-content}
+.tab-btn{padding:7px 18px;border-radius:6px;border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.tab-btn.active{background:var(--surface);color:var(--usiu-blue);font-weight:700;box-shadow:var(--shadow)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--usiu-blue-mid);box-shadow:0 0 0 3px rgba(0,91,181,0.08);background:#fff}
+.field textarea{resize:vertical;min-height:80px}
+.progress-bar-wrap{background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;margin-top:6px}
+.progress-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--usiu-blue-mid),var(--usiu-blue-light));transition:width .8s ease}
+.grade-A{background:#D1FAE5;color:#065F46;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px}
+.grade-B{background:#DBEAFE;color:#1D4ED8;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px}
+.grade-C{background:#FEF3C7;color:#92400E;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px}
+.grade-D{background:#FFEDD5;color:#9A3412;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px}
+.grade-F{background:#FEE2E2;color:#991B1B;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.alert-info{background:var(--info-bg);color:var(--info);border-left:3px solid var(--info)}
+.alert-success{background:var(--success-bg);color:var(--success);border-left:3px solid var(--success)}
+.alert-warning{background:var(--warning-bg);color:var(--warning);border-left:3px solid var(--warning)}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:10px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--usiu-blue-mid),var(--usiu-blue));transition:height .8s ease;min-height:4px}
+.bar.gold{background:linear-gradient(180deg,var(--usiu-gold-light),var(--usiu-gold))}
+.bar-label{font-size:10px;color:var(--text-dim)}
+.course-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .15s,box-shadow .15s}
+.course-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.course-card-top{height:80px;display:flex;align-items:flex-end;padding:12px 16px;position:relative}
+.course-card-top .code{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:rgba(255,255,255,0.8)}
+.course-card-body{padding:14px 16px}
+.course-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.course-card-meta{font-size:11px;color:var(--text-muted);display:flex;gap:12px}
+.course-card-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.profile-hero{background:linear-gradient(135deg,var(--usiu-blue) 0%,var(--usiu-blue-mid) 100%);border-radius:var(--radius) var(--radius) 0 0;padding:28px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden}
+.profile-hero .p-name{font-family:'Playfair Display',serif;font-size:22px;color:#fff}
+.profile-hero .p-id{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px}
+.profile-hero .p-dept{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px}
+.schedule-grid{display:grid;grid-template-columns:60px repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12px}
+.sch-head{background:var(--surface2);padding:10px 6px;text-align:center;font-weight:700;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.sch-time{background:var(--surface2);padding:8px 6px;text-align:center;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;display:flex;align-items:center;justify-content:center}
+.sch-cell{background:var(--surface);padding:4px;min-height:50px;position:relative}
+.sch-event{border-radius:5px;padding:5px 7px;font-size:10px;font-weight:600;height:100%;min-height:42px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}
+.sch-event .ev-code{font-family:'JetBrains Mono',monospace;font-size:9px;margin-bottom:2px;opacity:0.7}
+.sch-event .ev-room{font-size:9px;margin-top:2px;opacity:0.6}
+.notif-list{display:flex;flex-direction:column}
+.notif-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-item.unread .notif-text{font-weight:600}
+.notif-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.notif-text{font-size:13px;color:var(--text);line-height:1.5}
+.notif-time{font-size:11px;color:var(--text-dim);margin-top:3px}
+.transcript-header{text-align:center;padding:28px;border-bottom:2px solid var(--usiu-blue);margin-bottom:24px}
+.transcript-logo-text{font-family:'Playfair Display',serif;font-size:22px;color:var(--usiu-blue);font-weight:700}
+.transcript-title{font-size:14px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.semester-block{margin-bottom:24px}
+.semester-label{background:var(--usiu-blue);color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;display:inline-block;margin-bottom:10px;letter-spacing:0.5px}
+.gpa-strip{background:linear-gradient(135deg,var(--usiu-blue),var(--usiu-blue-mid));color:#fff;border-radius:var(--radius);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.gpa-strip .gpa-val{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--usiu-gold-light)}
+.gpa-strip .gpa-label{font-size:12px;color:rgba(255,255,255,0.6)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,10,30,0.5);backdrop-filter:blur(3px);z-index:999;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:12px;width:560px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.25);animation:modalIn .2s ease}
+@keyframes modalIn{from{transform:scale(0.96) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700;color:var(--usiu-blue)}
+.modal-close{cursor:pointer;color:var(--text-muted);font-size:20px;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+#toastContainer{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--text);color:#fff;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:500;min-width:240px;box-shadow:0 8px 24px rgba(0,0,0,0.25);display:flex;align-items:center;gap:10px;animation:toastIn .25s ease}
+.toast.success{background:var(--success)}.toast.error{background:var(--danger)}
+@keyframes toastIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+.empty-state{text-align:center;padding:48px 24px;color:var(--text-muted)}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px}
+.empty-state .es-title{font-size:16px;font-weight:700;color:var(--text-mid);margin-bottom:6px}
+.empty-state .es-sub{font-size:13px}
+.loading{display:flex;align-items:center;justify-content:center;padding:48px;color:var(--text-muted);gap:12px;font-size:14px}
+.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--usiu-blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.donut-wrap{position:relative;width:120px;height:120px;margin:0 auto}
+.donut{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--usiu-blue) 0deg,var(--usiu-blue) calc(var(--pct1,0)*3.6deg),var(--usiu-blue-light) calc(var(--pct1,0)*3.6deg),var(--usiu-blue-light) calc((var(--pct1,0)+var(--pct2,0))*3.6deg),var(--usiu-gold) calc((var(--pct1,0)+var(--pct2,0))*3.6deg),var(--usiu-gold) calc((var(--pct1,0)+var(--pct2,0)+var(--pct3,0))*3.6deg),var(--border) calc((var(--pct1,0)+var(--pct2,0)+var(--pct3,0))*3.6deg));display:flex;align-items:center;justify-content:center}
+.donut::after{content:'';width:70px;height:70px;background:var(--surface);border-radius:50%;position:absolute}
+.donut-center{position:absolute;z-index:1;text-align:center}
+.donut-center .big{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--usiu-blue)}
+.donut-center .sm{font-size:10px;color:var(--text-muted)}
+.legend{display:flex;flex-direction:column;gap:8px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-mid)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.status{display:inline-flex;align-items:center;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px}
+.status-pending{background:var(--warning-bg);color:var(--warning)}
+.status-submitted{background:var(--info-bg);color:var(--info)}
+.status-graded{background:var(--success-bg);color:var(--success)}
+.status-overdue{background:var(--danger-bg);color:var(--danger)}
+@media(max-width:900px){.grid-2,.grid-3,.grid-12,.grid-21{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="login-badge"><div class="dot">🎓</div><span>USIU-AFRICA · NAIROBI, KENYA</span></div>
+      <div class="login-headline">Welcome to<br><em>UniConnect</em><br>ERP Portal</div>
+      <p class="login-sub">The integrated academic management system for United States International University – Africa.</p>
+    </div>
+    <div class="login-stats">
+      <div class="login-stat"><div class="num">7,000+</div><div class="lbl">Students</div></div>
+      <div class="login-stat"><div class="num">70+</div><div class="lbl">Nations</div></div>
+      <div class="login-stat"><div class="num">25</div><div class="lbl">Degree Programs</div></div>
+      <div class="login-stat"><div class="num">5</div><div class="lbl">Schools</div></div>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-form-title">Sign In</div>
+    <p class="login-form-sub">Use your USIU-Africa credentials to access the portal.</p>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="text" id="loginId" placeholder="e.g. j.mwangi@usiu.ac.ke">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <div id="loginError" class="login-error"></div>
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Sign In to UniConnect →</button>
+    <div class="demo-accounts">
+      <div class="demo-title">Quick Demo Access</div>
+      <div class="demo-pills">
+        <div class="demo-pill" onclick="setDemo('student')">🎓 Student Demo</div>
+        <div class="demo-pill" onclick="setDemo('faculty')">👨‍🏫 Faculty Demo</div>
+        <div class="demo-pill" onclick="setDemo('admin')">🛡️ Admin Demo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="appShell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">
+        <div class="logo-icon">🎓</div>
+        <div><div class="logo-text">UniConnect</div><div class="logo-sub">USIU-AFRICA ERP</div></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar av1" id="sidebarAvatar">?</div>
+      <div class="user-info">
+        <div class="uname" id="sidebarName">Loading…</div>
+        <div class="urole role-student" id="sidebarRole">Student</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="logout-btn" onclick="doLogout()">🚪 <span>Sign Out</span></div>
+    </div>
+  </aside>
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-search"><span>🔍</span><input type="text" id="globalSearch" placeholder="Search students, courses…" oninput="handleSearch(this.value)"></div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="openModal('notifModal')">🔔<span class="notif-dot" id="notifDot"></span></button>
+      <button class="topbar-btn">❓</button>
+      <div class="topbar-avatar av1" id="topbarAvatar">?</div>
+    </div>
+  </div>
+  <main class="content" id="mainContent"></main>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="notifModal" onclick="if(event.target===this)closeModal('notifModal')">
+  <div class="modal" style="width:420px">
+    <div class="modal-header"><div class="modal-title">🔔 Notifications</div><span class="modal-close" onclick="closeModal('notifModal')">✕</span></div>
+    <div class="modal-body" style="padding:0 24px"><div class="notif-list" id="notifList"></div></div>
+  </div>
+</div>
+<div class="modal-overlay" id="genericModal" onclick="if(event.target===this)closeModal('genericModal')">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="genericModalTitle">Modal</div><span class="modal-close" onclick="closeModal('genericModal')">✕</span></div>
+    <div class="modal-body" id="genericModalBody"></div>
+    <div class="modal-footer" id="genericModalFooter"></div>
+  </div>
+</div>
+<div id="toastContainer"></div>
+
+<script src="api.js"></script>
+<script>
+// ═══════════════ STATE ═══════════════
+let currentUser = null;
+window.globalPageSearch = function() {};
+
+const COURSE_COLORS = ['#003B7A','#005BB5','#C9922A','#1B7A4A','#7C3AED','#B45309','#1A7FD4','#9D174D'];
+function colorForIndex(i){ return COURSE_COLORS[i % COURSE_COLORS.length]; }
+function avatarColor(i){ return ['av1','av2','av3','av4','av5','av6'][i % 6]; }
+function initials(name){ return name ? name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?'; }
+function gradeClass(g){ if(!g) return ''; const f=g[0]; return f==='A'?'grade-A':f==='B'?'grade-B':f==='C'?'grade-C':f==='D'?'grade-D':'grade-F'; }
+
+function getProfileId(){
+  if (!currentUser) return null;
+  return currentUser.profileId || currentUser.faculty_id || currentUser.student_id || null;
+}
+
+const NAV_CONFIGS = {
+  student:[
+    {section:'My Portal'},
+    {id:'dashboard',icon:'🏠',label:'Dashboard'},
+    {id:'myProfile',icon:'👤',label:'My Profile'},
+    {id:'myCourses',icon:'📚',label:'My Courses'},
+    {id:'myAssignments',icon:'📝',label:'Assignments'},
+    {id:'myGrades',icon:'⭐',label:'My Grades'},
+    {id:'mySchedule',icon:'🗓️',label:'Schedule'},
+    {section:'Academic'},
+    {id:'transcript',icon:'📄',label:'Transcript'},
+    {id:'enrollment',icon:'📋',label:'Enrollment'},
+  ],
+  faculty:[
+    {section:'Faculty Portal'},
+    {id:'dashboard',icon:'🏠',label:'Dashboard'},
+    {id:'facultyCourses',icon:'📚',label:'My Courses'},
+    {id:'assignmentSubmissions',icon:'📝',label:'Assignment Submissions'},
+    {id:'gradeSubmit',icon:'✏️',label:'Submit Grades'},
+    {id:'studentTracking',icon:'📊',label:'Student Tracking'},
+    {section:'Reports'},
+    {id:'courseReports',icon:'📈',label:'Course Reports'},
+  ],
+  admin:[
+    {section:'Administration'},
+    {id:'dashboard',icon:'🏠',label:'Dashboard'},
+    {id:'manageStudents',icon:'🎓',label:'Students'},
+    {id:'manageCourses',icon:'📚',label:'Courses'},
+    {id:'manageFaculty',icon:'👨‍🏫',label:'Faculty'},
+    {section:'Reports & Analytics'},
+    {id:'enrollmentReport',icon:'📊',label:'Enrollment Stats'},
+    {id:'transcriptReport',icon:'📄',label:'Transcripts'},
+    {section:'System'},
+    {id:'userManagement',icon:'🔐',label:'User Management'},
+  ]
+};
+
+// ═══════════════ AUTH ═══════════════
+function setDemo(role){
+  const c={student:{e:'j.mwangi@usiu.ac.ke',p:'password123'},faculty:{e:'s.odhiambo@usiu.ac.ke',p:'password123'},admin:{e:'admin@usiu.ac.ke',p:'password123'}};
+  document.getElementById('loginId').value=c[role].e;
+  document.getElementById('loginPass').value=c[role].p;
+}
+
+async function doLogin(){
+  const email=document.getElementById('loginId').value.trim();
+  const password=document.getElementById('loginPass').value.trim();
+  const errEl=document.getElementById('loginError');
+  const btn=document.getElementById('loginBtn');
+  errEl.style.display='none';
+  if(!email||!password){errEl.textContent='Please enter your email and password.';errEl.style.display='block';return;}
+  btn.textContent='Signing in…';btn.disabled=true;
+  try {
+    const data = await Auth.login(email, password);
+    currentUser = data.user;
+    currentUser.name = `${data.user.first_name||''} ${data.user.last_name||''}`.trim() || data.user.email;
+    currentUser.initials = initials(currentUser.name);
+    currentUser.avClass = 'av1';
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('appShell').style.display='block';
+    initApp();
+  } catch(err){
+    errEl.textContent = err.message === 'Failed to fetch'
+      ? '⚠️ Cannot reach server. Make sure npm run dev is running on port 3000.'
+      : '❌ ' + err.message;
+    errEl.style.display='block';
+  } finally {
+    btn.textContent='Sign In to UniConnect →';btn.disabled=false;
+  }
+}
+
+function doLogout(){
+  Auth.logout();
+  currentUser=null;
+  document.getElementById('appShell').style.display='none';
+  document.getElementById('loginPage').style.display='flex';
+}
+
+// ═══════════════ INIT ═══════════════
+function initApp(){
+  document.getElementById('sidebarName').textContent=currentUser.name;
+  document.getElementById('sidebarAvatar').textContent=currentUser.initials;
+  document.getElementById('sidebarAvatar').className=`user-avatar ${currentUser.avClass}`;
+  document.getElementById('topbarAvatar').textContent=currentUser.initials;
+  document.getElementById('topbarAvatar').className=`topbar-avatar ${currentUser.avClass}`;
+  const roleEl=document.getElementById('sidebarRole');
+  roleEl.textContent=currentUser.role.charAt(0).toUpperCase()+currentUser.role.slice(1);
+  roleEl.className=`urole role-${currentUser.role}`;
+  buildNav(); buildNotifications(); navigateTo('dashboard');
+}
+
+function buildNav(){
+  const nav=document.getElementById('sidebarNav'); nav.innerHTML='';
+  NAV_CONFIGS[currentUser.role].forEach(item=>{
+    if(item.section){const d=document.createElement('div');d.className='nav-section';d.textContent=item.section;nav.appendChild(d);}
+    else{const d=document.createElement('div');d.className='nav-item';d.id=`nav-${item.id}`;
+      d.innerHTML=`<span class="nav-icon">${item.icon}</span><span>${item.label}</span>${item.badge?`<span class="nav-badge">${item.badge}</span>`:''}`;
+      d.onclick=()=>navigateTo(item.id);nav.appendChild(d);}
+  });
+}
+
+function navigateTo(pageId){
+  document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+  const navEl=document.getElementById(`nav-${pageId}`);
+  if(navEl)navEl.classList.add('active');
+  const TITLES={dashboard:'Dashboard',myProfile:'My Profile',myCourses:'My Courses',myAssignments:'Assignments',myGrades:'My Grades',mySchedule:'Class Schedule',transcript:'Academic Transcript',enrollment:'Course Enrollment',facultyCourses:'My Courses',assignmentSubmissions:'Assignment Submissions',gradeSubmit:'Grade Submission',studentTracking:'Student Tracking',courseReports:'Course Reports',manageStudents:'Student Management',manageCourses:'Course Management',manageFaculty:'Faculty Management',enrollmentReport:'Enrollment Statistics',transcriptReport:'Transcript Reports',userManagement:'User Management'};
+  document.getElementById('topbarTitle').textContent=TITLES[pageId]||pageId;
+  const content=document.getElementById('mainContent');
+  content.innerHTML=`<div class="loading"><div class="spinner"></div> Loading…</div>`;
+  const builders={dashboard:buildDashboard,myProfile:buildMyProfile,myCourses:buildMyCourses,myAssignments:buildMyAssignments,myGrades:buildMyGrades,mySchedule:buildMySchedule,transcript:buildTranscript,enrollment:buildEnrollment,facultyCourses:buildFacultyCourses,gradeSubmit:buildGradeSubmit,studentTracking:buildStudentTracking,courseReports:buildCourseReports,manageStudents:buildManageStudents,manageCourses:buildManageCourses,manageFaculty:buildManageFaculty,enrollmentReport:buildEnrollmentReport,transcriptReport:buildTranscriptReport,userManagement:buildUserManagement,assignmentSubmissions:buildAssignmentSubmissions};
+  if(builders[pageId])builders[pageId](content);
+  else content.innerHTML=`<div class="empty-state"><div class="es-icon">🚧</div><div class="es-title">Coming Soon</div></div>`;
+}
+
+function buildNotifications(){
+  document.getElementById('notifList').innerHTML=[
+    {icon:'📝',bg:'#DBEAFE',title:'Assignment Due: CS3055 – Project Proposal',time:'2 hours ago',unread:true},
+    {icon:'✅',bg:'#D1FAE5',title:'Grade posted for CS3020 Mid-Semester Exam',time:'1 day ago',unread:true},
+    {icon:'📢',bg:'#FEF3C7',title:'USIU-Africa Career Fair – Nov 15, 2024',time:'2 days ago',unread:false},
+  ].map(n=>`<div class="notif-item ${n.unread?'unread':''}"><div class="notif-icon" style="background:${n.bg}">${n.icon}</div><div><div class="notif-text">${n.title}</div><div class="notif-time">${n.time}</div></div></div>`).join('');
+}
+
+function handleSearch(val){
+  if (typeof window.globalPageSearch === 'function') {
+    window.globalPageSearch(val);
+  }
+}
+
+// ════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════
+async function buildDashboard(el){
+  const role=currentUser.role;
+  if(role==='student') await buildStudentDashboard(el);
+  else if(role==='faculty') await buildFacultyDashboard(el);
+  else await buildAdminDashboard(el);
+}
+
+async function buildStudentDashboard(el){
+  try {
+    const [courses, grades] = await Promise.all([
+      Students.getCourses(currentUser.profileId),
+      Students.getGrades(currentUser.profileId)
+    ]);
+    const totalCredits = courses.reduce((s,c)=>s+(c.credits||0),0);
+    const gradedCourses = grades.filter(g=>g.grade_letter);
+    const cgpa = gradedCourses.length ? (gradedCourses.reduce((s,g)=>s+g.grade_points,0)/gradedCourses.length).toFixed(2) : 'N/A';
+    const today = new Date().toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric'});
+    const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const todayDay = dayNames[new Date().getDay()];
+
+    const todayCourses = courses.filter(c=>{
+      if(!c.days) return false;
+      return c.days.toLowerCase().split('/').some(d=>todayDay.toLowerCase().startsWith(d.toLowerCase().trim().slice(0,3)));
+    });
+
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Good morning, ${currentUser.name.split(' ')[0]} 👋</div>
+        <div class="page-subtitle">${currentUser.programme||'Student'} · ${currentUser.school||''}</div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE">📚</div><div><div class="stat-val">${courses.length}</div><div class="stat-label">Enrolled Courses</div><div class="stat-change up">↑ ${totalCredits} credits</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#D1FAE5">⭐</div><div><div class="stat-val">${cgpa}</div><div class="stat-label">Cumulative GPA</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7">📝</div><div><div class="stat-val">${gradedCourses.length}</div><div class="stat-label">Grades Posted</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#EDE9FE">🏆</div><div><div class="stat-val">Year ${currentUser.year_of_study||'–'}</div><div class="stat-label">Current Year</div></div></div>
+      </div>
+      <div class="grid-21" style="gap:20px">
+        <div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">📅 Today's Classes</div><div style="font-size:12px;color:var(--text-muted)">${today}</div></div>
+            <div style="padding:0">
+              ${todayCourses.length ? todayCourses.map((c,i)=>`
+                <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border)">
+                  <div style="width:4px;height:40px;border-radius:2px;background:${colorForIndex(i)};flex-shrink:0"></div>
+                  <div><div style="font-weight:600;font-size:13px">${c.course_name}</div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:2px"><span style="font-family:'JetBrains Mono',monospace">${c.course_code}</span> · ${c.room||'TBA'} · ${c.time_slot||''}</div></div>
+                </div>`).join('') : `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px">🎉 No classes today!</div>`}
+            </div>
+          </div>
+          <div class="card" style="margin-top:20px">
+            <div class="card-header"><div class="card-title">📚 My Courses This Semester</div></div>
+            <div style="padding:0">
+              ${courses.slice(0,4).map((c,i)=>`
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border)">
+                  <div style="width:36px;height:36px;border-radius:8px;background:${colorForIndex(i)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;font-family:'JetBrains Mono',monospace">${c.course_code.slice(0,2)}</div>
+                  <div style="flex:1"><div style="font-size:13px;font-weight:600">${c.course_name}</div>
+                  <div style="font-size:11px;color:var(--text-muted)">${c.faculty_name||'TBA'} · ${c.days||''}</div></div>
+                  <span class="badge badge-green">Enrolled</span>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">📊 Recent Grades</div><button class="btn btn-outline btn-sm" onclick="navigateTo('myGrades')">All Grades</button></div>
+            <div style="padding:0">
+              ${gradedCourses.slice(0,4).map(g=>`
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border)">
+                  <div><div style="font-size:13px;font-weight:600">${g.course_code}</div><div style="font-size:11px;color:var(--text-muted)">${g.course_name}</div></div>
+                  <span class="${gradeClass(g.grade_letter)}">${g.grade_letter}</span>
+                </div>`).join('') || `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px">No grades posted yet</div>`}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-blue" style="width:100%;justify-content:center" onclick="navigateTo('enrollment')">📋 Enroll in Courses</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="navigateTo('myAssignments')">📝 View Assignments</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="navigateTo('transcript')">📄 View Transcript</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="navigateTo('mySchedule')">🗓️ View Schedule</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  } catch(err){
+    el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;
+  }
+}
+
+async function buildFacultyDashboard(el){
+  try {
+    const courses = await Faculty.getCourses(currentUser.profileId);
+    const totalStudents = courses.reduce((s,c)=>s+(c.enrolled_count||0),0);
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">Welcome, ${currentUser.name} 👋</div>
+      <div class="page-subtitle">${currentUser.department||'Faculty'} · Fall 2024/2025</div></div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE">📚</div><div><div class="stat-val">${courses.length}</div><div class="stat-label">Active Courses</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#D1FAE5">🎓</div><div><div class="stat-val">${totalStudents}</div><div class="stat-label">Total Students</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7">⏳</div><div><div class="stat-val">${courses.length}</div><div class="stat-label">Pending Submissions</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📚 My Courses</div><button class="btn btn-blue btn-sm" onclick="navigateTo('gradeSubmit')">Submit Grades</button></div>
+        <div style="padding:0">
+          ${courses.map((c,i)=>`
+            <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
+              <div style="width:44px;height:44px;border-radius:8px;background:${colorForIndex(i)};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;font-family:'JetBrains Mono',monospace">${c.course_code.slice(0,2)}</div>
+              <div style="flex:1"><div style="font-weight:600;font-size:13px">${c.course_name}</div>
+              <div style="font-size:11px;color:var(--text-muted)">${c.course_code} · ${c.enrolled_count||0} students · ${c.room||'TBA'} · ${c.days||''} ${c.time_slot||''}</div></div>
+              <div style="text-align:right">
+                <div style="font-size:12px;color:var(--text-muted)">${c.enrolled_count||0}/${c.capacity} enrolled</div>
+                <div class="progress-bar-wrap" style="width:100px"><div class="progress-bar" style="width:${Math.round((c.enrolled_count||0)/c.capacity*100)}%"></div></div>
+              </div>
+            </div>`).join('') || `<div style="padding:24px;text-align:center;color:var(--text-muted)">No courses assigned</div>`}
+        </div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildAdminDashboard(el){
+  try {
+    const stats = await Reports.getEnrollment();
+    const t = stats.totals;
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Admin Dashboard 🛡️</div><div class="page-subtitle">United States International University – Africa · Fall 2024/2025</div></div>
+        <div class="page-header-actions">
+          <button class="btn btn-blue" onclick="openAddStudentModal()">+ Add Student</button>
+          <button class="btn btn-gold" onclick="navigateTo('enrollmentReport')">📊 Reports</button>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE">🎓</div><div><div class="stat-val">${t.total_students}</div><div class="stat-label">Total Students</div><div class="stat-change up">↑ Active: ${t.active}</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7">⚠️</div><div><div class="stat-val">${t.probation||0}</div><div class="stat-label">On Probation</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#D1FAE5">📚</div><div><div class="stat-val">${stats.byCourse.length}</div><div class="stat-label">Active Courses</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#EDE9FE">🏫</div><div><div class="stat-val">${stats.bySchool.length}</div><div class="stat-label">Schools</div></div></div>
+      </div>
+      <div class="grid-21" style="gap:20px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 Enrollment by School</div></div>
+          <div class="card-body">
+            ${stats.bySchool.map((s,i)=>`
+              <div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                  <span style="color:var(--text-mid)">${s.school}</span>
+                  <span style="color:var(--text-muted);font-weight:600">${s.count}</span>
+                </div>
+                <div class="progress-bar-wrap"><div class="progress-bar" style="width:${Math.round(s.count/t.total_students*100)}%"></div></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">🎓 By Year of Study</div></div>
+            <div class="card-body">
+              <div class="bar-chart">
+                ${stats.byYear.map(y=>`<div class="bar-col"><div class="bar" style="height:${Math.round(y.count/t.total_students*200)}%"></div><div class="bar-label">Y${y.year_of_study}</div></div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-blue" style="width:100%;justify-content:center" onclick="openAddStudentModal()">+ Register Student</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="navigateTo('manageCourses')">📚 Manage Courses</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="navigateTo('transcriptReport')">📄 Transcripts</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+// ════════════════════════════════════════
+//  STUDENT PAGES – ALL WIRED TO API
+// ════════════════════════════════════════
+async function buildMyProfile(el){
+  try {
+    const s = await Students.getById(currentUser.profileId);
+    el.innerHTML=`
+      <div class="card">
+        <div class="profile-hero">
+          <div class="avatar avatar-lg ${currentUser.avClass}">${currentUser.initials}</div>
+          <div>
+            <div class="p-name">${s.first_name} ${s.last_name}</div>
+            <div class="p-id">${s.student_no} · ${s.email}</div>
+            <div class="p-dept">${s.programme}</div>
+          </div>
+          <div style="margin-left:auto;display:flex;flex-direction:column;gap:10px;align-items:flex-end;position:relative;z-index:1">
+            <span class="badge ${s.status==='Active'?'badge-green':'badge-yellow'}" style="font-size:12px">${s.status}</span>
+            <button class="btn btn-outline btn-sm" style="padding:8px 12px;font-size:12px" onclick="openEditProfileModal()">Edit Profile</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="grid-2">
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--usiu-blue);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px">Academic Information</div>
+              ${[['Student No.',s.student_no],['Programme',s.programme],['School',s.school],['Year of Study',`Year ${s.year_of_study} of 4`],['Status',s.status],['Enrolled Since',new Date(s.created_at).toLocaleDateString('en-KE')]].map(([k,v])=>`
+                <div style="display:flex;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+                  <span style="color:var(--text-muted);width:160px;flex-shrink:0">${k}</span><span style="font-weight:500">${v||'–'}</span>
+                </div>`).join('')}
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--usiu-blue);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px">Contact Information</div>
+              ${[['Email',s.email],['Phone',s.phone||'–'],['Nationality',s.nationality||'–'],['Date of Birth',s.dob?new Date(s.dob).toLocaleDateString('en-KE'):'–'],['Gender',s.gender||'–']].map(([k,v])=>`
+                <div style="display:flex;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+                  <span style="color:var(--text-muted);width:160px;flex-shrink:0">${k}</span><span style="font-weight:500">${v}</span>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildMyCourses(el){
+  try {
+    const courses = await Students.getCourses(currentUser.profileId);
+    if(!courses.length){el.innerHTML=`<div class="empty-state"><div class="es-icon">📚</div><div class="es-title">No courses enrolled</div><div class="es-sub">Visit Enrollment to add courses</div></div>`;return;}
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">My Courses</div><div class="page-subtitle">${courses.length} courses · ${courses.reduce((s,c)=>s+(c.credits||0),0)} credits this semester</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+        ${courses.map((c,i)=>`
+          <div class="course-card">
+            <div class="course-card-top" style="background:linear-gradient(135deg,${colorForIndex(i)},${colorForIndex(i)}cc)">
+              <div class="code">${c.course_code}</div>
+            </div>
+            <div class="course-card-body">
+              <div class="course-card-name">${c.course_name}</div>
+              <div class="course-card-meta"><span>👨‍🏫 ${c.faculty_name||'TBA'}</span></div>
+              <div class="course-card-meta" style="margin-top:4px"><span>🗓️ ${c.days||'TBA'}</span><span>⏰ ${c.time_slot||''}</span></div>
+              <div class="course-card-meta" style="margin-top:4px"><span>📍 ${c.room||'TBA'}</span></div>
+            </div>
+            <div class="course-card-footer">
+              <span style="font-size:12px;color:var(--text-muted)">${c.credits} credits</span>
+              <span class="badge badge-green">Enrolled</span>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildMyAssignments(el){
+  try {
+    const courses = await Students.getCourses(currentUser.profileId);
+    const submissions = await Students.getSubmissions(currentUser.profileId);
+    const submissionMap = {};
+    submissions.forEach(s => submissionMap[s.assignment_id] = s);
+
+    if(!courses.length){
+      el.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><div class="es-title">No assignments found</div><div class="es-sub">Enroll in courses to see assignments here.</div></div>`;
+      return;
+    }
+
+    const items = [];
+    for (const course of courses) {
+      const assignments = await Courses.getAssignments(course.course_id);
+      assignments.forEach(a => items.push({ course, assignment: a, submission: submissionMap[a.assignment_id] }));
+    }
+
+    items.sort((a,b)=>new Date(a.assignment.due_date) - new Date(b.assignment.due_date));
+
+    if(!items.length){
+      el.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><div class="es-title">No assignments available</div><div class="es-sub">Your courses currently have no posted assignments.</div></div>`;
+      return;
+    }
+
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Assignments</div><div class="page-subtitle">${items.length} assignment${items.length===1?'':'s'} across ${courses.length} course${courses.length===1?'':'s'}</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Assignments</div></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Course</th><th>Assignment</th><th>Due Date</th><th>Max Score</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${items.map((item,i)=>{
+              const a=item.assignment;
+              const sub=item.submission;
+              const due = new Date(a.due_date);
+              const now = new Date();
+              const overdue = now > due;
+              const status = sub ? (sub.grade !== null ? `Graded: ${sub.grade}/100` : 'Submitted') : (overdue ? 'Overdue' : 'Pending');
+              const statusClass = sub ? (sub.grade !== null ? 'status-graded' : 'status-submitted') : (overdue ? 'status-overdue' : 'status-pending');
+              return `<tr>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${item.course.course_code}</span><div style="font-size:13px;font-weight:600">${item.course.course_name}</div></td>
+                <td>${a.title}<div style="font-size:12px;color:var(--text-muted);margin-top:2px">${a.description || 'No details'}</div></td>
+                <td style="font-size:12px;color:var(--text-muted)">${due.toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</td>
+                <td style="text-align:center">${a.max_score || 'N/A'}</td>
+                <td><span class="status ${statusClass}">${status}</span></td>
+                <td>
+                  ${sub ? `<a href="/uploads/${sub.file_path.split('/').pop()}" target="_blank" class="btn btn-sm btn-secondary">View Submission</a>` : 
+                  `<input type="file" id="file-${a.assignment_id}" accept=".pdf,.doc,.docx,.txt,.jpg,.png" style="display:none" onchange="uploadAssignment(${a.assignment_id})">
+                  <button class="btn btn-sm btn-primary" onclick="document.getElementById('file-${a.assignment_id}').click()">Upload</button>`}
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table></div>
+      </div>`;
+  } catch(err){
+    el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;
+  }
+}
+
+async function uploadAssignment(assignmentId) {
+  const fileInput = document.getElementById(`file-${assignmentId}`);
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  try {
+    await Courses.submitAssignment(assignmentId, file);
+    alert('Assignment submitted successfully!');
+    // Reload the page to show updated status
+    location.reload();
+  } catch (err) {
+    alert('Failed to submit assignment: ' + err.message);
+  }
+}
+
+async function buildMyGrades(el){
+  try {
+    const grades = await Students.getGrades(currentUser.profileId);
+    const graded = grades.filter(g=>g.grade_letter);
+    const ungraded = grades.filter(g=>!g.grade_letter);
+    const cgpa = graded.length ? (graded.reduce((s,g)=>s+g.grade_points,0)/graded.length).toFixed(2) : 'N/A';
+
+    // Group by semester
+    const sems={};
+    graded.forEach(g=>{if(!sems[g.semester])sems[g.semester]=[];sems[g.semester].push(g);});
+
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">My Grades</div><div class="page-subtitle">CGPA: ${cgpa} · ${graded.length} courses graded</div></div>
+      </div>
+      ${ungraded.length?`<div class="alert alert-info">ℹ️ ${ungraded.length} course(s) pending grade submission by your lecturer.</div>`:''}
+      ${Object.entries(sems).reverse().map(([sem,gs])=>{
+        const sgpa=(gs.reduce((s,g)=>s+g.grade_points,0)/gs.length).toFixed(2);
+        return `<div class="card" style="margin-bottom:20px">
+          <div class="card-header"><div class="card-title">📚 ${sem}</div><span style="font-size:13px;color:var(--text-muted)">Semester GPA: <strong style="color:var(--usiu-blue)">${sgpa}</strong></span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Grade</th><th>Points</th><th>Total Score</th></tr></thead>
+            <tbody>${gs.map(g=>`
+              <tr>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${g.course_code}</span></td>
+                <td>${g.course_name}</td>
+                <td style="text-align:center">${g.credits}</td>
+                <td><span class="${gradeClass(g.grade_letter)}">${g.grade_letter}</span></td>
+                <td style="text-align:center;font-weight:600">${g.grade_points}</td>
+                <td style="text-align:center">${g.total_score||'–'}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table></div>
+        </div>`;}).join('')}
+      <div class="gpa-strip">
+        <div><div class="gpa-label">CUMULATIVE GRADE POINT AVERAGE</div><div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">${graded.length} courses graded</div></div>
+        <div class="gpa-val">${cgpa}</div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildMySchedule(el){
+  try {
+    const courses = await Students.getCourses(currentUser.profileId);
+    const days=['Mon','Tue','Wed','Thu','Fri'];
+    const times=['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
+    const DAY_MAP={mon:0,tue:1,wed:2,thu:3,fri:4};
+
+    // Build events from real course data
+    const events=[];
+    courses.forEach((c,ci)=>{
+      if(!c.days||!c.time_slot) return;
+      const startHour=c.time_slot.split('-')[0]?.split(':')[0];
+      const startTime=startHour?`${startHour.padStart(2,'0')}:00`:null;
+      if(!startTime) return;
+      c.days.split('/').forEach(d=>{
+        const key=d.trim().toLowerCase().slice(0,3);
+        const dayIdx=DAY_MAP[key];
+        if(dayIdx!==undefined){
+          events.push({day:dayIdx,time:startTime,course:c.course_code,name:c.course_name.split(' ').slice(0,2).join(' '),room:c.room||'TBA',color:colorForIndex(ci),bg:colorForIndex(ci)+'22'});
+        }
+      });
+    });
+
+    let grid=`<div class="schedule-grid"><div class="sch-head"></div>${days.map(d=>`<div class="sch-head">${d}</div>`).join('')}`;
+    times.forEach(t=>{
+      grid+=`<div class="sch-time">${t}</div>`;
+      for(let d=0;d<5;d++){
+        const ev=events.find(e=>e.day===d&&e.time===t);
+        grid+=`<div class="sch-cell">${ev?`<div class="sch-event" style="background:${ev.bg};border-left:3px solid ${ev.color}"><div class="ev-code">${ev.course}</div><div style="font-size:10px;font-weight:600;color:#1e293b">${ev.name}</div><div class="ev-room">📍 ${ev.room}</div></div>`:''}</div>`;
+      }
+    });
+    grid+=`</div>`;
+
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">Class Schedule</div><div class="page-subtitle">Fall 2024/2025 · Week View · ${courses.length} courses</div></div></div>
+      <div class="card"><div class="card-body" style="padding:16px;overflow-x:auto">${grid}</div></div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildTranscript(el){
+  try {
+    const data = await Reports.getTranscript(currentUser.profileId);
+    const {student,semesters,cgpa,totalCredits} = data;
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Academic Transcript</div><div class="page-subtitle">Unofficial copy · For official transcript visit Registrar's Office</div></div>
+        <div class="page-header-actions">
+          <button class="btn btn-blue" onclick="emailTranscript()">📧 Email Transcript</button>
+          <button class="btn btn-outline" onclick="window.print()">🖨️ Print</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-body">
+        <div class="transcript-header">
+          <div class="transcript-logo-text">🎓 United States International University – Africa</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px">USIU Road, Off Thika Road, Nairobi, Kenya · www.usiu.ac.ke</div>
+          <div style="font-size:14px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-top:8px">Official Academic Transcript</div>
+          <div style="display:flex;justify-content:center;gap:40px;margin-top:16px;font-size:13px">
+            <div><span style="color:var(--text-muted)">Name: </span><strong>${student.first_name} ${student.last_name}</strong></div>
+            <div><span style="color:var(--text-muted)">ID: </span><strong style="font-family:'JetBrains Mono',monospace">${student.student_no}</strong></div>
+            <div><span style="color:var(--text-muted)">Programme: </span><strong>${student.programme}</strong></div>
+          </div>
+        </div>
+        ${Object.entries(semesters).map(([sem,grades])=>{
+          const sgpa=(grades.reduce((s,g)=>s+g.grade_points,0)/grades.length).toFixed(2);
+          return `<div class="semester-block">
+            <div class="semester-label">${sem}</div>
+            <table><thead><tr><th>Code</th><th>Course Title</th><th>Credits</th><th>Grade</th><th>Points</th></tr></thead>
+            <tbody>${grades.map(g=>`<tr>
+              <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${g.course_code}</span></td>
+              <td>${g.course_name}</td><td style="text-align:center">${g.credits}</td>
+              <td><span class="${gradeClass(g.grade_letter)}">${g.grade_letter}</span></td>
+              <td style="text-align:center;font-weight:600">${g.grade_points}</td>
+            </tr>`).join('')}</tbody></table>
+            <div style="text-align:right;font-size:13px;margin-top:8px;color:var(--text-muted)">Semester GPA: <strong style="color:var(--usiu-blue)">${sgpa}</strong></div>
+          </div>`;}).join('')}
+        <div class="gpa-strip">
+          <div><div class="gpa-label">CUMULATIVE GRADE POINT AVERAGE</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">${totalCredits} credit hours completed</div></div>
+          <div class="gpa-val">${cgpa}</div>
+        </div>
+        <div style="margin-top:16px;font-size:11px;color:var(--text-dim);text-align:center">
+          Issued: ${new Date().toLocaleDateString('en-KE',{year:'numeric',month:'long',day:'numeric'})} · Unofficial transcript. Official transcripts from Registrar's Office only.
+        </div>
+      </div></div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function emailTranscript(){
+  try {
+    const data = await apiFetch(`/reports/transcript/${currentUser.profileId}/email`,{method:'POST'});
+    showToast(data.message,'success');
+  } catch(err){showToast('Email failed: '+err.message,'error');}
+}
+
+// Expose apiFetch for transcript email call
+function apiFetch(endpoint,options={}){
+  const token=getToken();
+  const headers={'Content-Type':'application/json'};
+  if(token)headers['Authorization']=`Bearer ${token}`;
+  return fetch(`http://localhost:3000/api${endpoint}`,{...options,headers:{...headers,...(options.headers||{})}}).then(async r=>{
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'API error');
+    return d;
+  });
+}
+function getToken(){return localStorage.getItem('uc_token');}
+
+async function buildEnrollment(el){
+  try {
+    const [allCourses, enrolled] = await Promise.all([
+      Courses.getAll({semester:'Fall 2024/2025'}),
+      Students.getCourses(currentUser.profileId)
+    ]);
+    const enrolledIds = new Set(enrolled.map(c=>c.course_id));
+    let cart=[];
+
+    function renderCart(){
+      const cartEl=document.getElementById('enrollCart');
+      if(!cartEl)return;
+      cartEl.innerHTML=cart.length?cart.map(c=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <div><div style="font-weight:600">${c.course_name}</div><div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${c.course_code}</div></div>
+          <button onclick="removeCart(${c.course_id})" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-dim)">✕</button>
+        </div>`).join(''):`<div class="empty-state" style="padding:20px"><div class="es-icon">🛒</div><div class="es-title">Cart empty</div></div>`;
+    }
+
+    window.addToCart=function(courseId){
+      const c=allCourses.find(x=>x.course_id===courseId);
+      if(!c)return;
+      if(enrolledIds.has(courseId)){showToast('Already enrolled in this course','error');return;}
+      if(cart.find(x=>x.course_id===courseId)){showToast('Already in cart','error');return;}
+      cart.push(c);renderCart();showToast(`${c.course_code} added to cart`,'success');
+    };
+    window.removeCart=function(courseId){
+      cart=cart.filter(c=>c.course_id!==courseId);renderCart();
+    };
+    window.confirmEnroll=async function(){
+      if(!cart.length){showToast('Add courses to cart first','error');return;}
+      try{
+        const r=await Students.enroll(currentUser.profileId,cart.map(c=>c.course_id),'Fall 2024/2025');
+        showToast(r.message+' – Confirmation email sent!','success');
+        cart=[];renderCart();
+        // refresh enrolled set
+        cart.forEach(c=>enrolledIds.add(c.course_id));
+      }catch(err){showToast('Enrollment failed: '+err.message,'error');}
+    };
+
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">Course Enrollment</div><div class="page-subtitle">Fall 2024/2025 · Select courses to add</div></div></div>
+      <div class="alert alert-success">✅ Enrollment is open. You are currently enrolled in ${enrolled.length} course(s).</div>
+      <div class="grid-21">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📚 Available Courses</div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Code</th><th>Course</th><th>Faculty</th><th>Credits</th><th>Slots</th><th></th></tr></thead>
+            <tbody>
+              ${allCourses.map(c=>{
+                const isEnrolled=enrolledIds.has(c.course_id);
+                const pct=Math.round((c.enrolled_count||0)/c.capacity*100);
+                return `<tr>
+                  <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${c.course_code}</span></td>
+                  <td><div style="font-weight:600;font-size:13px">${c.course_name}</div><div style="font-size:11px;color:var(--text-muted)">${c.days||''} ${c.time_slot||''} · ${c.room||''}</div></td>
+                  <td style="font-size:12px">${c.faculty_name||'TBA'}</td>
+                  <td style="text-align:center">${c.credits}</td>
+                  <td><div style="font-size:12px">${c.capacity-(c.enrolled_count||0)} left</div><div class="progress-bar-wrap" style="width:80px"><div class="progress-bar" style="width:${pct}%;background:${pct>90?'var(--danger)':''}"></div></div></td>
+                  <td>${isEnrolled?`<span class="badge badge-green">Enrolled</span>`:`<button class="btn btn-blue btn-sm" onclick="addToCart(${c.course_id})">Add</button>`}</td>
+                </tr>`;}).join('')}
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🛒 Enrollment Cart</div></div>
+          <div class="card-body" id="enrollCart"><div class="empty-state" style="padding:20px"><div class="es-icon">🛒</div><div class="es-title">Cart empty</div></div></div>
+          <div class="card-footer"><button class="btn btn-gold" style="width:100%;justify-content:center" onclick="confirmEnroll()">✅ Confirm Enrollment</button></div>
+        </div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+// ════════════════════════════════════════
+//  FACULTY PAGES – ALL WIRED
+// ════════════════════════════════════════
+async function buildFacultyCourses(el){
+  try {
+    const facultyId = getProfileId();
+    const courses = await Faculty.getCourses(facultyId);
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">My Courses</div><div class="page-subtitle">Fall 2024/2025 · ${courses.length} courses assigned</div></div></div>
+      ${courses.map((c,i)=>`
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header" style="background:linear-gradient(90deg,${colorForIndex(i)}15,transparent)">
+            <div>
+              <div class="card-title" style="display:flex;align-items:center;gap:10px">
+                <span style="font-family:'JetBrains Mono',monospace;background:${colorForIndex(i)};color:#fff;padding:2px 10px;border-radius:5px;font-size:12px">${c.course_code}</span>${c.course_name}
+              </div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${c.days||''} · ${c.time_slot||''} · ${c.room||'TBA'} · ${c.credits} credits</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-outline btn-sm" onclick="navigateTo('gradeSubmit')">Submit Grades</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+              ${[{label:'Enrolled',val:c.enrolled_count||0,icon:'🎓'},{label:'Capacity',val:c.capacity,icon:'🏛️'},{label:'Semester',val:c.semester,icon:'📅'}].map(s=>`
+                <div style="text-align:center;padding:14px;background:var(--surface2);border-radius:8px">
+                  <div style="font-size:20px;margin-bottom:4px">${s.icon}</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--usiu-blue);font-weight:700">${s.val}</div>
+                  <div style="font-size:11px;color:var(--text-muted)">${s.label}</div>
+                </div>`).join('')}
+            </div>
+            <div class="progress-bar-wrap" style="margin-top:16px">
+              <div class="progress-bar" style="width:${Math.round((c.enrolled_count||0)/c.capacity*100)}%"></div>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${c.enrolled_count||0}/${c.capacity} seats filled</div>
+          </div>
+        </div>`).join('')}`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildGradeSubmit(el){
+  try {
+    const facultyId = getProfileId();
+    const courses = await Faculty.getCourses(facultyId);
+    if(!courses.length){el.innerHTML=`<div class="empty-state"><div class="es-icon">📚</div><div class="es-title">No courses assigned</div></div>`;return;}
+
+    let selectedCourse = courses[0];
+    let courseStudents = await Courses.getStudents(selectedCourse.course_id);
+
+    async function renderGradeTable(){
+      courseStudents = await Courses.getStudents(selectedCourse.course_id);
+      const tbody = document.getElementById('gradeTableBody');
+      if(!tbody) return;
+      tbody.innerHTML=courseStudents.map((s,i)=>{
+        const mid=s.grade_letter?Math.round(s.total_score/0.84):70;
+        const fin=s.grade_letter?Math.round(s.total_score/0.84):72;
+        const asgn=s.grade_letter?Math.round(s.total_score/0.84):75;
+        const total=s.total_score||Math.round(mid*0.4+fin*0.4+asgn*0.2);
+        const grade=s.grade_letter||(total>=80?'A':total>=70?'B':total>=60?'C':total>=50?'D':'F');
+        return `<tr data-student="${s.student_id}">
+          <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar ${avatarColor(i)}">${initials(s.name)}</div>${s.name}</div></td>
+          <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${s.student_no}</span></td>
+          <td><input type="number" value="${mid}" min="0" max="100" class="score-input" style="width:70px;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:13px" onchange="recalcRow(this)"></td>
+          <td><input type="number" value="${fin}" min="0" max="100" class="score-input" style="width:70px;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:13px" onchange="recalcRow(this)"></td>
+          <td><input type="number" value="${asgn}" min="0" max="100" class="score-input" style="width:70px;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:13px" onchange="recalcRow(this)"></td>
+          <td style="font-weight:700;color:var(--usiu-blue)" class="total-cell">${total}</td>
+          <td class="grade-cell"><span class="${gradeClass(grade)}">${grade}</span></td>
+        </tr>`;}).join('');
+    }
+
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Submit Grades</div><div class="page-subtitle" id="gradeSubtitle">${selectedCourse.course_code} – ${selectedCourse.course_name}</div></div>
+        <div class="page-header-actions">
+          <select class="form-select" style="width:260px" onchange="changeCourse(this.value)" id="courseSelector">
+            ${courses.map(c=>`<option value="${c.course_id}">${c.course_code} – ${c.course_name}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="alert alert-warning">⚠️ Grades emailed to students upon submission. Submitted grades require Registrar approval to change.</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🎓 Grade Entry</div><button class="btn btn-blue" onclick="submitGrades()">✅ Submit & Notify Students</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Student</th><th>ID</th><th>Midterm (40%)</th><th>Final (40%)</th><th>Assignments (20%)</th><th>Total</th><th>Grade</th></tr></thead>
+          <tbody id="gradeTableBody"><tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted)">Loading students…</td></tr></tbody>
+        </table></div>
+      </div>`;
+
+    window.changeCourse=async function(courseId){
+      selectedCourse=courses.find(c=>c.course_id==courseId);
+      document.getElementById('gradeSubtitle').textContent=`${selectedCourse.course_code} – ${selectedCourse.course_name}`;
+      await renderGradeTable();
+    };
+    window.submitGrades=async function(){
+      const rows=document.querySelectorAll('#gradeTableBody tr');
+      const grades=[];
+      rows.forEach(row=>{
+        const inputs=row.querySelectorAll('.score-input');
+        if(inputs.length<3)return;
+        grades.push({student_id:parseInt(row.dataset.student),midterm_score:+inputs[0].value,final_score:+inputs[1].value,assignment_score:+inputs[2].value});
+      });
+      try{
+        const r=await Faculty.submitGrades(currentUser.profileId,selectedCourse.course_id,grades);
+        showToast(r.message+' – Students notified by email!','success');
+      }catch(err){showToast('Submission failed: '+err.message,'error');}
+    };
+
+    await renderGradeTable();
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildAssignmentSubmissions(el){
+  try {
+    const facultyId = getProfileId();
+    const courses = await Faculty.getCourses(facultyId);
+    if(!courses.length){el.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><div class="es-title">No courses assigned</div></div>`;return;}
+
+    let selectedCourse = courses[0];
+    let assignments = await Courses.getAssignments(selectedCourse.course_id);
+    let selectedAssignment = assignments[0];
+    let submissions = selectedAssignment ? await Courses.getSubmissions(selectedCourse.course_id, selectedAssignment.assignment_id) : [];
+
+    async function renderSubmissions(){
+      assignments = await Courses.getAssignments(selectedCourse.course_id);
+      selectedAssignment = assignments.find(a => a.assignment_id == selectedAssignment?.assignment_id) || assignments[0];
+      submissions = selectedAssignment ? await Courses.getSubmissions(selectedCourse.course_id, selectedAssignment.assignment_id) : [];
+      
+      const tbody = document.getElementById('submissionsTableBody');
+      if(!tbody) return;
+      tbody.innerHTML = submissions.map((s,i) => `
+        <tr>
+          <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar ${avatarColor(i)}">${initials(s.student_name)}</div><div><div style="font-weight:600">${s.student_name}</div><div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${s.student_no}</div></div></div></td>
+          <td>${new Date(s.submitted_at).toLocaleDateString('en-KE', {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+          <td><a href="/uploads/${s.file_path.split('/').pop()}" target="_blank" class="btn btn-sm btn-outline">View Submission</a></td>
+          <td><input type="number" value="${s.grade || ''}" min="0" max="100" class="grade-input" style="width:70px;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:13px" data-submission="${s.submission_id}"></td>
+          <td><textarea class="feedback-input" style="width:200px;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:13px;resize:vertical" rows="2" data-submission="${s.submission_id}">${s.feedback || ''}</textarea></td>
+          <td><button class="btn btn-sm btn-success" onclick="gradeSubmission(${s.submission_id})">Save Grade</button></td>
+        </tr>`).join('');
+    }
+
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Assignment Submissions</div><div class="page-subtitle" id="submissionsSubtitle">${selectedCourse.course_code} – ${selectedCourse.course_name}</div></div>
+        <div class="page-header-actions">
+          <select class="form-select" style="width:200px;margin-right:10px" onchange="changeCourseForSubmissions(this.value)" id="courseSelectorSubmissions">
+            ${courses.map(c=>`<option value="${c.course_id}">${c.course_code} – ${c.course_name}</option>`).join('')}
+          </select>
+          <select class="form-select" style="width:200px" onchange="changeAssignment(this.value)" id="assignmentSelector">
+            ${assignments.map(a=>`<option value="${a.assignment_id}">${a.title}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📝 Student Submissions</div></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Student</th><th>Submitted</th><th>File</th><th>Grade</th><th>Feedback</th><th>Action</th></tr></thead>
+          <tbody id="submissionsTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Loading submissions…</td></tr></tbody>
+        </table></div>
+      </div>`;
+
+    window.changeCourseForSubmissions = async function(courseId){
+      selectedCourse = courses.find(c => c.course_id == courseId);
+      document.getElementById('submissionsSubtitle').textContent = `${selectedCourse.course_code} – ${selectedCourse.course_name}`;
+      await renderSubmissions();
+    };
+
+    window.changeAssignment = async function(assignmentId){
+      selectedAssignment = assignments.find(a => a.assignment_id == assignmentId);
+      await renderSubmissions();
+    };
+
+    window.gradeSubmission = async function(submissionId){
+      const gradeInput = document.querySelector(`.grade-input[data-submission="${submissionId}"]`);
+      const feedbackInput = document.querySelector(`.feedback-input[data-submission="${submissionId}"]`);
+      const grade = gradeInput.value ? parseInt(gradeInput.value) : null;
+      const feedback = feedbackInput.value.trim();
+
+      try {
+        await Courses.gradeSubmission(submissionId, { grade, feedback });
+        showToast('Grade saved successfully!', 'success');
+      } catch (err) {
+        showToast('Failed to save grade: ' + err.message, 'error');
+      }
+    };
+
+    await renderSubmissions();
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+function recalcRow(input){
+  const row=input.closest('tr');
+  const inputs=row.querySelectorAll('.score-input');
+  const total=Math.round(+inputs[0].value*0.4+ +inputs[1].value*0.4+ +inputs[2].value*0.2);
+  const grade=total>=80?'A':total>=70?'B':total>=60?'C':total>=50?'D':'F';
+  row.querySelector('.total-cell').textContent=total;
+  row.querySelector('.grade-cell').innerHTML=`<span class="${gradeClass(grade)}">${grade}</span>`;
+}
+
+async function buildStudentTracking(el){
+  try {
+    const facultyId = getProfileId();
+    const students = await Faculty.getStudents(facultyId);
+    if (!students || students.length === 0) {
+      el.innerHTML = `<div class="empty-state" style="padding:20px"><div class="es-icon">🎓</div><div class="es-title">No students found yet</div><div class="es-subtitle">No active enrollments in your courses.</div></div>`;
+      return;
+    }
+    // Group by student
+    const studentMap={};
+    students.forEach(s=>{
+      if(!studentMap[s.student_id]) studentMap[s.student_id]={...s,courses:[]};
+      studentMap[s.student_id].courses.push({code:s.course_code,name:s.course_name,grade:s.grade_letter,score:s.total_score});
+    });
+    const list=Object.values(studentMap);
+    const atRisk=list.filter(s=>s.courses.some(c=>c.grade==='D'||c.grade==='F'||!c.grade));
+    const onTrack=list.filter(s=>s.courses.every(c=>c.grade&&c.grade!=='D'&&c.grade!=='F'));
+
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">Student Tracking</div><div class="page-subtitle">All students across your courses</div></div></div>
+      <div class="stats-grid">
+        ${[{icon:'🎓',val:list.length,label:'Total Students',bg:'#DBEAFE'},{icon:'✅',val:onTrack.length,label:'On Track',bg:'#D1FAE5'},{icon:'⚠️',val:atRisk.length,label:'Needs Attention',bg:'#FEF3C7'}].map(s=>`
+          <div class="stat-card"><div class="stat-icon" style="background:${s.bg}">${s.icon}</div><div><div class="stat-val">${s.val}</div><div class="stat-label">${s.label}</div></div></div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📊 Student Performance</div></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Student</th><th>Programme</th><th>Course</th><th>Grade</th><th>Score</th><th>Status</th></tr></thead>
+          <tbody>
+            ${students.map((s,i)=>{
+              const status=!s.grade_letter?'Pending':s.grade_letter.startsWith('A')||s.grade_letter.startsWith('B')?'On Track':s.grade_letter.startsWith('C')?'Average':'At Risk';
+              const sc=status==='On Track'?'badge-green':status==='Average'?'badge-yellow':status==='Pending'?'badge-gray':'badge-red';
+              return `<tr>
+                <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar ${avatarColor(i)}">${initials(s.name)}</div><div><div style="font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${s.student_no}</div></div></div></td>
+                <td style="font-size:12px">${s.programme}</td>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${s.course_code}</span></td>
+                <td>${s.grade_letter?`<span class="${gradeClass(s.grade_letter)}">${s.grade_letter}</span>`:'<span class="badge badge-gray">Pending</span>'}</td>
+                <td>${s.total_score||'–'}</td>
+                <td><span class="badge ${sc}">${status}</span></td>
+              </tr>`;}).join('')}
+          </tbody>
+        </table></div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildCourseReports(el){
+  try {
+    const courses = await Faculty.getCourses(currentUser.profileId);
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">Course Reports</div><div class="page-subtitle">Performance analytics</div></div></div>
+      <div class="grid-2">
+        ${courses.map((c,i)=>`
+          <div class="card">
+            <div class="card-header"><div><div class="card-title">${c.course_name}</div><div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${c.course_code}</div></div></div>
+            <div class="card-body">
+              <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13px">
+                <span style="color:var(--text-muted)">Enrolled: <strong>${c.enrolled_count||0}/${c.capacity}</strong></span>
+                <span style="color:var(--text-muted)">Semester: <strong>${c.semester}</strong></span>
+              </div>
+              <div class="progress-bar-wrap" style="height:8px"><div class="progress-bar" style="width:${Math.round((c.enrolled_count||0)/c.capacity*100)}%"></div></div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${Math.round((c.enrolled_count||0)/c.capacity*100)}% capacity</div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+// ════════════════════════════════════════
+//  ADMIN PAGES – ALL WIRED
+// ════════════════════════════════════════
+async function buildManageStudents(el){
+  try {
+    const students = await Students.getAll();
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Student Management</div><div class="page-subtitle">${students.length} students loaded</div></div>
+        <div class="page-header-actions">
+          <button class="btn btn-blue" onclick="openAddStudentModal()">+ Add Student</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div class="topbar-search" style="width:260px"><span>🔍</span><input type="text" placeholder="Search…" oninput="filterStudentTable(this.value)"></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Student</th><th>Student No.</th><th>Programme</th><th>School</th><th>Year</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="studentTableBody">
+            ${students.map((s,i)=>`
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:10px"><div class="avatar ${avatarColor(i)}">${initials(s.first_name+' '+s.last_name)}</div><span style="font-weight:600">${s.first_name} ${s.last_name}</span></div></td>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${s.student_no}</span></td>
+                <td style="font-size:12px">${s.programme}</td>
+                <td><span class="badge badge-blue">${s.school}</span></td>
+                <td>Y${s.year_of_study}</td>
+                <td><span class="badge ${s.status==='Active'?'badge-green':s.status==='Probation'?'badge-yellow':'badge-red'}">${s.status}</span></td>
+                <td><div style="display:flex;gap:5px">
+                  <button class="btn btn-outline btn-sm" onclick="viewStudentModal(${s.student_id})">View</button>
+                </div></td>
+              </tr>`).join('')}
+          </tbody>
+        </table></div>
+        <div class="card-footer"><span style="font-size:13px;color:var(--text-muted)">Showing ${students.length} students</span></div>
+      </div>`;
+
+    window.filterStudentTable=function(val){
+      const v=val.toLowerCase();
+      document.querySelectorAll('#studentTableBody tr').forEach(row=>{
+        row.style.display=row.textContent.toLowerCase().includes(v)?'':'none';
+      });
+    };
+    window.globalPageSearch = window.filterStudentTable;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function viewStudentModal(studentId){
+  try {
+    const s = await Students.getById(studentId);
+    document.getElementById('genericModalTitle').textContent=`Student – ${s.first_name} ${s.last_name}`;
+    document.getElementById('genericModalBody').innerHTML=`
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:20px;background:linear-gradient(135deg,var(--usiu-blue),var(--usiu-blue-mid));border-radius:10px">
+        <div class="avatar avatar-lg av1">${initials(s.first_name+' '+s.last_name)}</div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:20px;color:#fff">${s.first_name} ${s.last_name}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,0.6);margin-top:4px">${s.student_no}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px">${s.programme}</div></div>
+      </div>
+      ${[['Email',s.email],['School',s.school],['Year',`Year ${s.year_of_study}`],['Status',s.status],['Nationality',s.nationality||'–'],['Phone',s.phone||'–']].map(([k,v])=>`
+        <div style="display:flex;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--text-muted);width:140px">${k}</span><span style="font-weight:600">${v}</span>
+        </div>`).join('')}`;
+    document.getElementById('genericModalFooter').innerHTML=`
+      <button class="btn btn-outline" onclick="closeModal('genericModal')">Close</button>`;
+    openModal('genericModal');
+  } catch(err){showToast(err.message,'error');}
+}
+
+async function buildManageCourses(el){
+  try {
+    const courses = await Courses.getAll();
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Course Management</div><div class="page-subtitle">${courses.length} courses</div></div>
+        <div class="page-header-actions"><button class="btn btn-blue" onclick="openAddCourseModal()">+ Create Course</button></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="topbar-search" style="width:320px"><span>🔍</span><input type="text" placeholder="Search courses…" oninput="filterCourseTable(this.value)"></div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Code</th><th>Course</th><th>Faculty</th><th>Days</th><th>Time</th><th>Credits</th><th>Slots</th><th></th></tr></thead>
+          <tbody id="courseTableBody">
+            ${courses.map((c,i)=>`
+              <tr>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${c.course_code}</span></td>
+                <td><div style="font-weight:600">${c.course_name}</div><div style="font-size:11px;color:var(--text-muted)">${c.school}</div></td>
+                <td>${c.faculty_name||'Unassigned'}</td>
+                <td>${c.days||'TBA'}</td>
+                <td>${c.time_slot||'TBA'}</td>
+                <td style="text-align:center">${c.credits}</td>
+                <td style="text-align:center">${c.capacity - (c.enrolled_count||0)} left</td>
+                <td><button class="btn btn-outline btn-sm" onclick="openEditCourseModal(${c.course_id})">Edit</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>`;
+
+    window.filterCourseTable = function(val){
+      const v=val.toLowerCase();
+      document.querySelectorAll('#courseTableBody tr').forEach(row=>{
+        row.style.display=row.textContent.toLowerCase().includes(v)?'':'none';
+      });
+    };
+    window.globalPageSearch = window.filterCourseTable;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildManageFaculty(el){
+  try {
+    const faculty = await Faculty.getAll();
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Faculty Management</div><div class="page-subtitle">${faculty.length} faculty members</div></div>
+        <div class="page-header-actions"><button class="btn btn-blue">+ Add Faculty</button></div>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>Faculty Member</th><th>Employee No.</th><th>Department</th><th>School</th><th>Email</th><th>Courses</th></tr></thead>
+        <tbody>
+          ${faculty.map((f,i)=>`
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div class="avatar ${avatarColor(i)}">${initials(f.first_name+' '+f.last_name)}</div><span style="font-weight:600">${f.title||''} ${f.first_name} ${f.last_name}</span></div></td>
+              <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${f.employee_no}</span></td>
+              <td>${f.department}</td>
+              <td><span class="badge badge-blue">${f.school}</span></td>
+              <td style="font-size:12px">${f.email}</td>
+              <td style="text-align:center">${f.course_count||0}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table></div></div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildEnrollmentReport(el){
+  try {
+    const stats = await Reports.getEnrollment();
+    const t=stats.totals;
+    el.innerHTML=`
+      <div class="page-header">
+        <div><div class="page-title">Enrollment Statistics</div><div class="page-subtitle">Live data from database</div></div>
+        <div class="page-header-actions"><button class="btn btn-blue" onclick="window.print()">🖨️ Print Report</button></div>
+      </div>
+      <div class="stats-grid">
+        ${[{icon:'🎓',val:t.total_students,label:'Total Students',bg:'#DBEAFE'},{icon:'✅',val:t.active,label:'Active',bg:'#D1FAE5'},{icon:'⚠️',val:t.probation||0,label:'Probation',bg:'#FEF3C7'},{icon:'🚫',val:t.suspended||0,label:'Suspended',bg:'#FEE2E2'}].map(s=>`
+          <div class="stat-card"><div class="stat-icon" style="background:${s.bg}">${s.icon}</div><div><div class="stat-val">${s.val}</div><div class="stat-label">${s.label}</div></div></div>`).join('')}
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 By School</div></div>
+          <div class="card-body">
+            ${stats.bySchool.map(s=>`
+              <div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                  <span style="color:var(--text-mid)">${s.school}</span><span style="font-weight:600">${s.count}</span>
+                </div>
+                <div class="progress-bar-wrap"><div class="progress-bar" style="width:${Math.round(s.count/t.total_students*100)}%"></div></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📈 By Year of Study</div></div>
+          <div class="card-body">
+            <div class="bar-chart">
+              ${stats.byYear.map(y=>`<div class="bar-col"><div class="bar" style="height:${Math.round(y.count/t.total_students*200)}%"></div><div class="bar-label">Y${y.year_of_study}</div></div>`).join('')}
+            </div>
+            <div style="margin-top:16px">
+              ${stats.byYear.map(y=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-muted)">Year ${y.year_of_study}</span><span style="font-weight:600">${y.count} students</span></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📋 Course Enrollment</div></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Course</th><th>Name</th><th>Enrolled</th><th>Capacity</th><th>Fill Rate</th></tr></thead>
+          <tbody>
+            ${stats.byCourse.map(c=>`
+              <tr>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${c.course_code}</span></td>
+                <td>${c.course_name}</td>
+                <td style="font-weight:600">${c.enrolled}</td>
+                <td>${c.capacity}</td>
+                <td><div style="display:flex;align-items:center;gap:8px">
+                  <div class="progress-bar-wrap" style="width:100px"><div class="progress-bar" style="width:${Math.round(c.enrolled/c.capacity*100)}%;background:${c.enrolled/c.capacity>0.9?'var(--danger)':''}"></div></div>
+                  <span style="font-size:12px;color:var(--text-muted)">${Math.round(c.enrolled/c.capacity*100)}%</span>
+                </div></td>
+              </tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildTranscriptReport(el){
+  try {
+    const students = await Students.getAll();
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">Transcript Generator</div><div class="page-subtitle">Generate academic transcripts for any student</div></div></div>
+      <div class="grid-12">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔍 Find Student</div></div>
+          <div class="card-body">
+            <div class="field"><label>Search</label><input type="text" id="transcriptSearch" placeholder="Student name or number…" oninput="filterTranscriptList(this.value)"></div>
+            <div id="transcriptStudentList" style="max-height:400px;overflow-y:auto">
+              ${students.map((s,i)=>`
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''" onclick="loadTranscriptPreview(${s.student_id},'${s.first_name} ${s.last_name}')">
+                  <div class="avatar ${avatarColor(i)}">${initials(s.first_name+' '+s.last_name)}</div>
+                  <div style="flex:1;font-size:13px"><div style="font-weight:600">${s.first_name} ${s.last_name}</div>
+                  <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${s.student_no} · ${s.programme}</div></div>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title" id="transcriptPreviewTitle">📄 Transcript Preview</div>
+            <button class="btn btn-blue btn-sm" id="emailTranscriptBtn" style="display:none" onclick="emailAdminTranscript()">📧 Email to Student</button>
+          </div>
+          <div class="card-body" id="transcriptPreview">
+            <div class="empty-state"><div class="es-icon">📄</div><div class="es-title">Select a student</div><div class="es-sub">Click a student on the left to preview their transcript</div></div>
+          </div>
+        </div>
+      </div>`;
+
+    let currentTranscriptStudentId=null;
+    window.filterTranscriptList=function(val){
+      const v=val.toLowerCase();
+      document.querySelectorAll('#transcriptStudentList > div').forEach(row=>{row.style.display=row.textContent.toLowerCase().includes(v)?'':'none';});
+    };
+    window.loadTranscriptPreview=async function(studentId,name){
+      currentTranscriptStudentId=studentId;
+      document.getElementById('transcriptPreviewTitle').textContent=`📄 ${name}`;
+      document.getElementById('transcriptPreview').innerHTML=`<div class="loading"><div class="spinner"></div> Loading transcript…</div>`;
+      try{
+        const data=await Reports.getTranscript(studentId);
+        const {student,semesters,cgpa,totalCredits}=data;
+        document.getElementById('emailTranscriptBtn').style.display='';
+        document.getElementById('transcriptPreview').innerHTML=`
+          <div style="border:1px solid var(--border);border-radius:8px;padding:20px">
+            <div style="text-align:center;border-bottom:2px solid var(--usiu-blue);padding-bottom:12px;margin-bottom:12px">
+              <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--usiu-blue);font-weight:700">🎓 USIU-Africa</div>
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Academic Transcript</div>
+              <div style="font-size:13px;margin-top:8px"><strong>${student.first_name} ${student.last_name}</strong></div>
+              <div style="font-size:11px;color:var(--text-muted)">${student.student_no} · ${student.programme}</div>
+            </div>
+            ${Object.entries(semesters).map(([sem,gs])=>`
+              <div style="margin-bottom:12px">
+                <div style="font-size:11px;font-weight:700;color:var(--usiu-blue);background:var(--info-bg);padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:6px">${sem}</div>
+                ${gs.map(g=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border)">
+                  <span style="font-family:'JetBrains Mono',monospace;width:60px;flex-shrink:0">${g.course_code}</span>
+                  <span style="flex:1;color:var(--text-mid)">${g.course_name}</span>
+                  <span class="${gradeClass(g.grade_letter)}">${g.grade_letter}</span>
+                </div>`).join('')}
+              </div>`).join('')}
+            <div style="display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:2px solid var(--usiu-blue)">
+              <span style="font-size:13px;color:var(--text-muted)">CGPA · ${totalCredits} credits</span>
+              <span style="font-weight:700;color:var(--usiu-blue);font-family:'Playfair Display',serif;font-size:20px">${cgpa}</span>
+            </div>
+          </div>`;
+      }catch(err){document.getElementById('transcriptPreview').innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+    };
+    window.emailAdminTranscript=async function(){
+      if(!currentTranscriptStudentId){showToast('No student selected','error');return;}
+      try{
+        const r=await apiFetch(`/reports/transcript/${currentTranscriptStudentId}/email`,{method:'POST'});
+        showToast(r.message,'success');
+      }catch(err){showToast('Email failed: '+err.message,'error');}
+    };
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+async function buildUserManagement(el){
+  try {
+    const [students, faculty] = await Promise.all([Students.getAll(), Faculty.getAll()]);
+    const allUsers=[
+      ...students.slice(0,6).map((s,i)=>({name:`${s.first_name} ${s.last_name}`,id:s.student_no,email:s.email,role:'student',lastLogin:'–',av:avatarColor(i)})),
+      ...faculty.slice(0,4).map((f,i)=>({name:`${f.title||''} ${f.first_name} ${f.last_name}`.trim(),id:f.employee_no,email:f.email,role:'faculty',lastLogin:'–',av:avatarColor(i)})),
+      {name:'System Admin',id:'ADM-001',email:'admin@usiu.ac.ke',role:'admin',lastLogin:'Active',av:'av5'},
+    ];
+    el.innerHTML=`
+      <div class="page-header"><div><div class="page-title">User Management</div><div class="page-subtitle">Roles and access control</div></div>
+      <div class="page-header-actions"><button class="btn btn-blue">+ Create User</button></div></div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>User</th><th>ID</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${allUsers.map(u=>`
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div class="avatar ${u.av}">${initials(u.name)}</div><span style="font-weight:600">${u.name}</span></div></td>
+              <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${u.id}</span></td>
+              <td style="font-size:12px">${u.email}</td>
+              <td><span class="badge ${u.role==='admin'?'badge-red':u.role==='faculty'?'badge-yellow':'badge-blue'}">${u.role}</span></td>
+              <td><button class="btn btn-outline btn-sm">Edit Role</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table></div></div>`;
+  } catch(err){el.innerHTML=`<div class="alert alert-warning">⚠️ ${err.message}</div>`;}
+}
+
+// ════════════════════════════════════════
+//  MODALS
+// ════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function openAddStudentModal(){
+  document.getElementById('genericModalTitle').textContent='+ Register New Student';
+  document.getElementById('genericModalBody').innerHTML=`
+    <div class="form-row">
+      <div class="field"><label>First Name</label><input type="text" id="newFirstName" placeholder="First name"></div>
+      <div class="field"><label>Last Name</label><input type="text" id="newLastName" placeholder="Last name"></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Email</label><input type="email" id="newEmail" placeholder="firstname.lastname@usiu.ac.ke"></div>
+      <div class="field"><label>Password</label><input type="password" id="newPassword" placeholder="Temporary password" value="password123"></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Programme</label><select id="newProgramme"><option>BSc Software Engineering</option><option>BSc Data Science & Analytics</option><option>BSc Finance</option><option>BSc Applied Computer Technology</option><option>BSc Information Systems</option><option>BSc Computer Science</option><option>BSc Business Analytics</option><option>BSc Pharmaceutical Sciences</option><option>BSc Global Health and Development</option><option>BBA Marketing</option><option>BA Journalism</option><option>BA International Relations</option><option>BA Media & Communication</option><option>MA Clinical Psychology</option></select></div>
+      <div class="field"><label>School</label><select id="newSchool"><option value="SST">SST</option><option value="CSB">CSB</option><option value="HSS">HSS</option><option value="CCA">CCA</option><option value="SPHS">SPHS</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Phone</label><input type="text" id="newPhone" placeholder="+254 7xx xxx xxx"></div>
+      <div class="field"><label>Year of Study</label><select id="newYear"><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select></div>
+    </div>`;
+  document.getElementById('genericModalFooter').innerHTML=`
+    <button class="btn btn-outline" onclick="closeModal('genericModal')">Cancel</button>
+    <button class="btn btn-blue" onclick="submitNewStudent()">Register Student</button>`;
+  openModal('genericModal');
+}
+
+async function submitNewStudent(){
+  const data={
+    first_name:document.getElementById('newFirstName').value.trim(),
+    last_name:document.getElementById('newLastName').value.trim(),
+    email:document.getElementById('newEmail').value.trim(),
+    password:document.getElementById('newPassword').value,
+    programme:document.getElementById('newProgramme').value,
+    school:document.getElementById('newSchool').value,
+    phone:document.getElementById('newPhone').value,
+    year_of_study:document.getElementById('newYear').value,
+  };
+  if(!data.first_name||!data.last_name||!data.email){showToast('Please fill all required fields','error');return;}
+  try{
+    const r=await Students.create(data);
+    closeModal('genericModal');
+    showToast(`Student registered! No. ${r.student_no} – Welcome email sent!`,'success');
+    navigateTo('manageStudents');
+  }catch(err){showToast('Registration failed: '+err.message,'error');}
+}
+
+function openAddCourseModal(){
+  document.getElementById('genericModalTitle').textContent='+ Create New Course';
+  document.getElementById('genericModalBody').innerHTML=`
+    <div class="form-row">
+      <div class="field"><label>Course Code</label><input type="text" id="newCourseCode" placeholder="e.g. CS4010"></div>
+      <div class="field"><label>Credits</label><input type="number" id="newCredits" value="3" readonly></div>
+    </div>
+    <div class="field"><label>Course Name</label><input type="text" id="newCourseName" placeholder="Full course name"></div>
+    <div class="form-row">
+      <div class="field"><label>School</label><select id="newCourseSchool"><option value="SST">SST</option><option value="CSB">CSB</option><option value="HSS">HSS</option><option value="CCA">CCA</option><option value="SPHS">SPHS</option></select></div>
+      <div class="field"><label>Capacity</label><input type="number" id="newCapacity" value="45"></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Room</label><input type="text" id="newRoom" placeholder="e.g. LH-204"></div>
+      <div class="field"><label>Days</label><select id="newDays"><option>Mon/Wed</option><option>Tue/Thu</option><option>Fri</option><option>Sat</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Time Slot</label><input type="text" id="newTimeSlot" placeholder="e.g. 08:00-09:30"></div>
+      <div class="field"><label>Semester</label><input type="text" id="newSemester" value="Fall 2024/2025"></div>
+    </div>`;
+  document.getElementById('genericModalFooter').innerHTML=`
+    <button class="btn btn-outline" onclick="closeModal('genericModal')">Cancel</button>
+    <button class="btn btn-blue" onclick="submitNewCourse()">Create Course</button>`;
+  openModal('genericModal');
+}
+
+async function submitNewCourse(){
+  const data={
+    course_code:document.getElementById('newCourseCode').value.trim(),
+    course_name:document.getElementById('newCourseName').value.trim(),
+    school:document.getElementById('newCourseSchool').value,
+    capacity:+document.getElementById('newCapacity').value,
+    room:document.getElementById('newRoom').value,
+    days:document.getElementById('newDays').value,
+    time_slot:document.getElementById('newTimeSlot').value,
+    semester:document.getElementById('newSemester').value,
+  };
+  if(!data.course_code||!data.course_name){showToast('Course code and name required','error');return;}
+  try{
+    const r=await Courses.create(data);
+    closeModal('genericModal');
+    showToast(`Course ${data.course_code} created successfully!`,'success');
+    navigateTo('manageCourses');
+  }catch(err){showToast('Failed: '+err.message,'error');}
+}
+
+async function openEditCourseModal(courseId){
+  try {
+    const [course, faculty] = await Promise.all([Courses.getById(courseId), Faculty.getAll()]);
+    document.getElementById('genericModalTitle').textContent=`Edit ${course.course_code}`;
+    document.getElementById('genericModalBody').innerHTML=`
+      <div class="form-row">
+        <div class="field"><label>Course Code</label><input type="text" id="editCourseCode" value="${course.course_code}" readonly></div>
+        <div class="field"><label>Credits</label><input type="number" value="3" readonly></div>
+      </div>
+      <div class="field"><label>Course Name</label><input type="text" id="editCourseName" value="${course.course_name}"></div>
+      <div class="form-row">
+        <div class="field"><label>School</label><input type="text" id="editCourseSchool" value="${course.school}"></div>
+        <div class="field"><label>Capacity</label><input type="number" id="editCapacity" value="${course.capacity}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Lecturer</label><select id="editFacultyId"><option value="">Unassigned</option>${faculty.map(f=>`<option value="${f.faculty_id}" ${course.faculty_id===f.faculty_id?'selected':''}>${f.title||''} ${f.first_name} ${f.last_name}</option>`).join('')}</select></div>
+        <div class="field"><label>Room</label><input type="text" id="editRoom" value="${course.room||''}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Days</label><select id="editDays"><option${course.days==='Mon/Wed'?' selected':''}>Mon/Wed</option><option${course.days==='Tue/Thu'?' selected':''}>Tue/Thu</option><option${course.days==='Fri'?' selected':''}>Fri</option><option${course.days==='Sat'?' selected':''}>Sat</option></select></div>
+        <div class="field"><label>Time Slot</label><input type="text" id="editTimeSlot" value="${course.time_slot||''}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Semester</label><input type="text" id="editSemester" value="${course.semester}"></div>
+        <div class="field"><label>Active</label><select id="editActive"><option value="1" ${course.is_active?'selected':''}>Yes</option><option value="0" ${!course.is_active?'selected':''}>No</option></select></div>
+      </div>`;
+    document.getElementById('genericModalFooter').innerHTML=`
+      <button class="btn btn-outline" onclick="closeModal('genericModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="submitEditCourse(${courseId})">Save Changes</button>`;
+    openModal('genericModal');
+  } catch(err){showToast('Unable to load course: '+err.message,'error');}
+}
+
+async function submitEditCourse(courseId){
+  const data={
+    course_name:document.getElementById('editCourseName').value.trim(),
+    school:document.getElementById('editCourseSchool').value.trim(),
+    capacity:+document.getElementById('editCapacity').value,
+    faculty_id:document.getElementById('editFacultyId').value || null,
+    room:document.getElementById('editRoom').value.trim(),
+    days:document.getElementById('editDays').value,
+    time_slot:document.getElementById('editTimeSlot').value.trim(),
+    semester:document.getElementById('editSemester').value.trim(),
+    is_active:+document.getElementById('editActive').value,
+  };
+  if(!data.course_name||!data.school||!data.days){showToast('Course name, school, and days are required','error');return;}
+  try{
+    await Courses.update(courseId,data);
+    closeModal('genericModal');
+    showToast('Course updated successfully','success');
+    navigateTo('manageCourses');
+  }catch(err){showToast('Update failed: '+err.message,'error');}
+}
+
+async function openEditProfileModal(){
+  try {
+    const s = await Students.getById(currentUser.profileId);
+    document.getElementById('genericModalTitle').textContent='Edit Profile';
+    document.getElementById('genericModalBody').innerHTML=`
+      <div class="form-row">
+        <div class="field"><label>First Name</label><input type="text" id="editFirstName" value="${s.first_name}"></div>
+        <div class="field"><label>Last Name</label><input type="text" id="editLastName" value="${s.last_name}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Phone</label><input type="text" id="editPhone" value="${s.phone||''}"></div>
+        <div class="field"><label>Nationality</label><input type="text" id="editNationality" value="${s.nationality||''}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Date of Birth</label><input type="date" id="editDob" value="${s.dob||''}"></div>
+        <div class="field"><label>Gender</label><select id="editGender"><option value="">Select gender</option><option value="Male" ${s.gender==='Male'?'selected':''}>Male</option><option value="Female" ${s.gender==='Female'?'selected':''}>Female</option><option value="Other" ${s.gender==='Other'?'selected':''}>Other</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Year of Study</label><select id="editYearOfStudy"><option value="1" ${s.year_of_study==1?'selected':''}>Year 1</option><option value="2" ${s.year_of_study==2?'selected':''}>Year 2</option><option value="3" ${s.year_of_study==3?'selected':''}>Year 3</option><option value="4" ${s.year_of_study==4?'selected':''}>Year 4</option></select></div>
+        <div class="field"><label>Status</label><select id="editStatus"><option value="Active" ${s.status==='Active'?'selected':''}>Active</option><option value="Probation" ${s.status==='Probation'?'selected':''}>Probation</option><option value="Inactive" ${s.status==='Inactive'?'selected':''}>Inactive</option></select></div>
+      </div>
+      <div class="field"><label>Email</label><input type="email" value="${s.email}" readonly></div>`;
+    document.getElementById('genericModalFooter').innerHTML=`
+      <button class="btn btn-outline" onclick="closeModal('genericModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="submitEditProfile()">Save Profile</button>`;
+    openModal('genericModal');
+  } catch(err){showToast('Unable to load profile: '+err.message,'error');}
+}
+
+async function submitEditProfile(){
+  const data={
+    first_name:document.getElementById('editFirstName').value.trim(),
+    last_name:document.getElementById('editLastName').value.trim(),
+    phone:document.getElementById('editPhone').value.trim(),
+    dob:document.getElementById('editDob').value || null,
+    gender:document.getElementById('editGender').value || null,
+    nationality:document.getElementById('editNationality').value.trim(),
+    year_of_study:+document.getElementById('editYearOfStudy').value,
+    status:document.getElementById('editStatus').value,
+  };
+  if(!data.first_name||!data.last_name){showToast('Name fields cannot be empty','error');return;}
+  try{
+    await Students.update(currentUser.profileId,data);
+    currentUser.name = `${data.first_name} ${data.last_name}`.trim();
+    saveUser(currentUser);
+    document.getElementById('sidebarName').textContent=currentUser.name;
+    document.getElementById('topbarAvatar').textContent=initials(currentUser.name);
+    closeModal('genericModal');
+    showToast('Profile updated successfully','success');
+    navigateTo('myProfile');
+  }catch(err){showToast('Profile update failed: '+err.message,'error');}
+}
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+function showToast(msg,type=''){
+  const tc=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`${type==='success'?'✅':type==='error'?'❌':'ℹ️'} ${msg}`;
+  tc.appendChild(t);
+  setTimeout(()=>t.remove(),4000);
+}
+
+// Allow Enter key on login
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none')doLogin();});
+</script>
+</body>
+</html>
