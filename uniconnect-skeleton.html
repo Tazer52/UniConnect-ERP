@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniConnect – Project Skeleton</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --surface2: #1C2333;
+    --border: #30363D;
+    --accent: #58A6FF;
+    --accent2: #F78166;
+    --accent3: #3FB950;
+    --accent4: #D2A8FF;
+    --accent5: #FFA657;
+    --accent6: #79C0FF;
+    --text: #E6EDF3;
+    --muted: #8B949E;
+    --dim: #484F58;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge.green { background: rgba(63,185,80,0.12); border-color: rgba(63,185,80,0.3); color: var(--accent3); }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: calc(100vh - 65px);
+  }
+
+  /* ── SIDEBAR: FILE TREE ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    overflow-y: auto;
+    position: sticky;
+    top: 65px;
+    height: calc(100vh - 65px);
+  }
+
+  .sidebar-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 20px 16px;
+  }
+
+  .tree { list-style: none; }
+
+  .tree-item {
+    position: relative;
+  }
+
+  .tree-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 20px;
+    cursor: pointer;
+    border-radius: 0;
+    font-size: 13px;
+    color: var(--text);
+    transition: background 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .tree-label:hover { background: rgba(255,255,255,0.04); }
+  .tree-label.active { background: rgba(88,166,255,0.1); color: var(--accent); }
+
+  .tree-label .icon { font-size: 14px; flex-shrink: 0; }
+  .tree-label .name { flex: 1; }
+  .tree-label .tag {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .tree-children {
+    padding-left: 20px;
+    border-left: 1px solid var(--border);
+    margin-left: 28px;
+    display: none;
+  }
+  .tree-children.open { display: block; }
+
+  .tree-item.folder > .tree-label::before {
+    content: '▶';
+    font-size: 8px;
+    color: var(--dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    width: 10px;
+  }
+  .tree-item.folder.open > .tree-label::before {
+    transform: rotate(90deg);
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 20px;
+  }
+
+  /* ── MAIN PANEL ── */
+  .main {
+    padding: 40px;
+    overflow-y: auto;
+  }
+
+  /* ── MODULE CARDS ── */
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+
+  /* ── TECH STACK ROW ── */
+  .stack-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .stack-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .stack-chip .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── MODULES GRID ── */
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-accent, var(--accent));
+  }
+  .module-card:hover {
+    border-color: var(--card-accent, var(--accent));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .module-card.active {
+    border-color: var(--card-accent, var(--accent));
+    background: var(--surface2);
+  }
+
+  .card-icon { font-size: 24px; margin-bottom: 12px; }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .card-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .file-pill {
+    font-size: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── DB SCHEMA SECTION ── */
+  .db-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .db-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .db-table-header {
+    background: var(--surface2);
+    padding: 10px 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .db-table-header .tbl-icon { font-size: 13px; }
+  .db-field {
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: var(--muted);
+  }
+  .db-field:last-child { border-bottom: none; }
+  .db-field .ftype {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--dim);
+    font-style: italic;
+  }
+  .pk { color: var(--accent5); }
+  .fk { color: var(--accent4); }
+
+  /* ── FLOW SECTION ── */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .flow-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 12px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .flow-node .fn-icon { font-size: 20px; margin-bottom: 6px; }
+  .flow-node .fn-label { color: var(--text); font-weight: 500; font-size: 12px; }
+  .flow-node .fn-sub { color: var(--muted); font-size: 10px; margin-top: 2px; }
+  .flow-arrow {
+    color: var(--dim);
+    font-size: 18px;
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── ROLES SECTION ── */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .role-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .role-card .role-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .role-perm {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 3px 0;
+  }
+  .role-perm .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent3); flex-shrink: 0; }
+  .role-perm .dot.red { background: var(--accent2); }
+  .role-perm .dot.yellow { background: var(--accent5); }
+
+  /* ── DETAIL PANEL ── */
+  .detail-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    display: none;
+  }
+  .detail-panel.visible { display: block; }
+  .detail-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .code-block {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: #CDD9E5;
+  }
+  .code-block .kw { color: #FF7B72; }
+  .code-block .fn { color: #D2A8FF; }
+  .code-block .str { color: #A5D6FF; }
+  .code-block .cm { color: #8B949E; font-style: italic; }
+  .code-block .num { color: #FFA657; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  .progress-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+  }
+  .progress-label { width: 180px; color: var(--muted); flex-shrink: 0; }
+  .progress-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    transition: width 1s ease;
+  }
+  .progress-pct { width: 36px; text-align: right; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Uni<span>Connect</span> <span style="color:var(--muted);font-size:13px;font-weight:400;">/ Project Skeleton</span></div>
+  <div class="header-meta">
+    <span class="badge">MVP v1.0</span>
+    <span class="badge green">5 Modules</span>
+    <span style="color:var(--dim)">HTML · CSS · JS · Node.js · MySQL</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ══ SIDEBAR FILE TREE ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-title">📁 Project Structure</div>
+    <ul class="tree" id="fileTree"></ul>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="main">
+
+    <div class="page-title">UniConnect ERP – Architecture Blueprint</div>
+    <p class="page-subtitle">Full project skeleton: file structure, modules, database schema, roles & API flow. Click any module card to see its file breakdown.</p>
+
+    <!-- TECH STACK -->
+    <div class="section-label">Tech Stack</div>
+    <div class="stack-row">
+      <div class="stack-chip"><span class="dot" style="background:#F7DF1E"></span>JavaScript (Vanilla)</div>
+      <div class="stack-chip"><span class="dot" style="background:#E34F26"></span>HTML5</div>
+      <div class="stack-chip"><span class="dot" style="background:#1572B6"></span>CSS3</div>
+      <div class="stack-chip"><span class="dot" style="background:#3C873A"></span>Node.js + Express</div>
+      <div class="stack-chip"><span class="dot" style="background:#00758F"></span>MySQL</div>
+      <div class="stack-chip"><span class="dot" style="background:#CB3837"></span>JWT Auth</div>
+      <div class="stack-chip"><span class="dot" style="background:#F05340"></span>bcrypt</div>
+      <div class="stack-chip"><span class="dot" style="background:#8DD6F9"></span>Webpack (optional)</div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="section-label">Core Modules (MVP)</div>
+    <div class="modules-grid" id="modulesGrid"></div>
+
+    <!-- DETAIL PANEL -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-title" id="detailTitle"></div>
+      <div class="code-block" id="detailCode"></div>
+    </div>
+
+    <!-- DATABASE TABLES -->
+    <div class="section-label">Database Schema – Key Tables</div>
+    <div class="db-grid" id="dbGrid"></div>
+
+    <!-- API FLOW -->
+    <div class="section-label">Request Flow</div>
+    <div class="flow-row" id="flowRow"></div>
+
+    <!-- ROLES -->
+    <div class="section-label">Roles & Permissions</div>
+    <div class="roles-grid" id="rolesGrid"></div>
+
+    <!-- BUILD ORDER -->
+    <div class="section-label">Suggested Build Order</div>
+    <div class="progress-row" id="progressRow"></div>
+
+  </main>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════
+
+const FILE_TREE = [
+  { name: 'uniconnect/', type: 'folder', open: true, children: [
+    { name: 'frontend/', type: 'folder', open: true, children: [
+      { name: 'index.html', type: 'file', tag: 'entry' },
+      { name: 'assets/', type: 'folder', children: [
+        { name: 'css/', type: 'folder', children: [
+          { name: 'main.css', type: 'file' },
+          { name: 'components.css', type: 'file' },
+          { name: 'dashboard.css', type: 'file' },
+        ]},
+        { name: 'js/', type: 'folder', children: [
+          { name: 'app.js', type: 'file', tag: 'core' },
+          { name: 'router.js', type: 'file' },
+          { name: 'auth.js', type: 'file' },
+          { name: 'api.js', type: 'file' },
+        ]},
+        { name: 'img/', type: 'folder', children: [
+          { name: 'logo.svg', type: 'file' },
+        ]},
+      ]},
+      { name: 'pages/', type: 'folder', children: [
+        { name: 'login.html', type: 'file' },
+        { name: 'dashboard.html', type: 'file' },
+        { name: 'students/', type: 'folder', children: [
+          { name: 'list.html', type: 'file' },
+          { name: 'profile.html', type: 'file' },
+          { name: 'register.html', type: 'file' },
+          { name: 'grades.html', type: 'file' },
+        ]},
+        { name: 'courses/', type: 'folder', children: [
+          { name: 'list.html', type: 'file' },
+          { name: 'detail.html', type: 'file' },
+          { name: 'schedule.html', type: 'file' },
+          { name: 'materials.html', type: 'file' },
+        ]},
+        { name: 'faculty/', type: 'folder', children: [
+          { name: 'portal.html', type: 'file' },
+          { name: 'grade-submit.html', type: 'file' },
+          { name: 'student-tracking.html', type: 'file' },
+        ]},
+        { name: 'reports/', type: 'folder', children: [
+          { name: 'transcripts.html', type: 'file' },
+          { name: 'enrollment.html', type: 'file' },
+          { name: 'stats.html', type: 'file' },
+        ]},
+        { name: 'admin/', type: 'folder', children: [
+          { name: 'users.html', type: 'file' },
+          { name: 'settings.html', type: 'file' },
+        ]},
+      ]},
+      { name: 'components/', type: 'folder', children: [
+        { name: 'navbar.js', type: 'file' },
+        { name: 'sidebar.js', type: 'file' },
+        { name: 'table.js', type: 'file' },
+        { name: 'modal.js', type: 'file' },
+        { name: 'toast.js', type: 'file' },
+        { name: 'chart.js', type: 'file' },
+      ]},
+    ]},
+    { name: 'backend/', type: 'folder', open: true, children: [
+      { name: 'server.js', type: 'file', tag: 'entry' },
+      { name: 'config/', type: 'folder', children: [
+        { name: 'db.js', type: 'file', tag: 'core' },
+        { name: 'env.js', type: 'file' },
+        { name: 'cors.js', type: 'file' },
+      ]},
+      { name: 'routes/', type: 'folder', children: [
+        { name: 'auth.routes.js', type: 'file' },
+        { name: 'student.routes.js', type: 'file' },
+        { name: 'course.routes.js', type: 'file' },
+        { name: 'faculty.routes.js', type: 'file' },
+        { name: 'report.routes.js', type: 'file' },
+      ]},
+      { name: 'controllers/', type: 'folder', children: [
+        { name: 'auth.controller.js', type: 'file' },
+        { name: 'student.controller.js', type: 'file' },
+        { name: 'course.controller.js', type: 'file' },
+        { name: 'faculty.controller.js', type: 'file' },
+        { name: 'report.controller.js', type: 'file' },
+      ]},
+      { name: 'models/', type: 'folder', children: [
+        { name: 'User.js', type: 'file' },
+        { name: 'Student.js', type: 'file' },
+        { name: 'Course.js', type: 'file' },
+        { name: 'Enrollment.js', type: 'file' },
+        { name: 'Grade.js', type: 'file' },
+        { name: 'Faculty.js', type: 'file' },
+        { name: 'Assignment.js', type: 'file' },
+      ]},
+      { name: 'middleware/', type: 'folder', children: [
+        { name: 'auth.middleware.js', type: 'file', tag: 'core' },
+        { name: 'role.middleware.js', type: 'file' },
+        { name: 'validate.middleware.js', type: 'file' },
+        { name: 'error.middleware.js', type: 'file' },
+      ]},
+      { name: 'utils/', type: 'folder', children: [
+        { name: 'jwt.js', type: 'file' },
+        { name: 'hash.js', type: 'file' },
+        { name: 'response.js', type: 'file' },
+        { name: 'gradeCalc.js', type: 'file' },
+      ]},
+    ]},
+    { name: 'database/', type: 'folder', children: [
+      { name: 'schema.sql', type: 'file', tag: 'core' },
+      { name: 'seed.sql', type: 'file' },
+      { name: 'migrations/', type: 'folder', children: [
+        { name: '001_create_users.sql', type: 'file' },
+        { name: '002_create_students.sql', type: 'file' },
+        { name: '003_create_courses.sql', type: 'file' },
+        { name: '004_create_enrollments.sql', type: 'file' },
+        { name: '005_create_grades.sql', type: 'file' },
+        { name: '006_create_faculty.sql', type: 'file' },
+      ]},
+    ]},
+    { name: '.env', type: 'file', tag: 'config' },
+    { name: '.env.example', type: 'file' },
+    { name: 'package.json', type: 'file', tag: 'config' },
+    { name: 'README.md', type: 'file' },
+    { name: '.gitignore', type: 'file' },
+  ]}
+];
+
+const MODULES = [
+  {
+    id: 'auth',
+    icon: '🔐',
+    title: 'Authentication & Roles',
+    color: '#F78166',
+    desc: 'JWT-based login, role guards (admin/faculty/student), session management.',
+    files: ['auth.routes.js', 'auth.controller.js', 'auth.middleware.js', 'role.middleware.js', 'jwt.js', 'login.html'],
+    detail: `<span class="cm">// backend/routes/auth.routes.js</span>
+<span class="kw">const</span> router = <span class="fn">require</span>(<span class="str">'express'</span>).Router();
+<span class="kw">const</span> { login, logout, refreshToken } = <span class="fn">require</span>(<span class="str">'../controllers/auth.controller'</span>);
+<span class="kw">const</span> { verifyToken } = <span class="fn">require</span>(<span class="str">'../middleware/auth.middleware'</span>);
+
+router.<span class="fn">post</span>(<span class="str">'/login'</span>, login);
+router.<span class="fn">post</span>(<span class="str">'/logout'</span>, verifyToken, logout);
+router.<span class="fn">post</span>(<span class="str">'/refresh'</span>, refreshToken);
+
+<span class="cm">// Roles: 'admin' | 'faculty' | 'student'</span>
+<span class="cm">// JWT payload: { userId, role, studentId? }</span>`
+  },
+  {
+    id: 'students',
+    icon: '🎓',
+    title: 'Student Management',
+    color: '#58A6FF',
+    desc: 'Student profiles, registration, enrollment history, grade viewing.',
+    files: ['student.routes.js', 'student.controller.js', 'Student.js', 'Enrollment.js', 'list.html', 'profile.html', 'grades.html'],
+    detail: `<span class="cm">// backend/controllers/student.controller.js</span>
+<span class="kw">const</span> getAllStudents   = <span class="fn">async</span>(req, res) => { <span class="cm">/* paginated list */</span> };
+<span class="kw">const</span> getStudentById   = <span class="fn">async</span>(req, res) => { <span class="cm">/* profile + enrollments */</span> };
+<span class="kw">const</span> createStudent    = <span class="fn">async</span>(req, res) => { <span class="cm">/* admin only */</span> };
+<span class="kw">const</span> updateStudent    = <span class="fn">async</span>(req, res) => { <span class="cm">/* update profile */</span> };
+<span class="kw">const</span> getStudentGrades = <span class="fn">async</span>(req, res) => { <span class="cm">/* grades per semester */</span> };
+<span class="kw">const</span> enrollCourse     = <span class="fn">async</span>(req, res) => { <span class="cm">/* add to course */</span> };`
+  },
+  {
+    id: 'courses',
+    icon: '📚',
+    title: 'Course Management',
+    color: '#3FB950',
+    desc: 'Course creation, scheduling, assignments, materials upload.',
+    files: ['course.routes.js', 'course.controller.js', 'Course.js', 'Assignment.js', 'list.html', 'detail.html', 'schedule.html'],
+    detail: `<span class="cm">// backend/routes/course.routes.js</span>
+router.<span class="fn">get</span>   (<span class="str">'/courses'</span>,                    getAllCourses);
+router.<span class="fn">post</span>  (<span class="str">'/courses'</span>,        adminOnly,   createCourse);
+router.<span class="fn">get</span>   (<span class="str">'/courses/:id'</span>,               getCourseById);
+router.<span class="fn">get</span>   (<span class="str">'/courses/:id/schedule'</span>,       getSchedule);
+router.<span class="fn">get</span>   (<span class="str">'/courses/:id/materials'</span>,      getMaterials);
+router.<span class="fn">post</span>  (<span class="str">'/courses/:id/assignments'</span>,   createAssignment);
+router.<span class="fn">get</span>   (<span class="str">'/courses/:id/students'</span>,       getEnrolledStudents);`
+  },
+  {
+    id: 'faculty',
+    icon: '👨‍🏫',
+    title: 'Faculty Portal',
+    color: '#D2A8FF',
+    desc: 'Grade submission, student tracking, course assignments per faculty.',
+    files: ['faculty.routes.js', 'faculty.controller.js', 'Faculty.js', 'Grade.js', 'portal.html', 'grade-submit.html'],
+    detail: `<span class="cm">// backend/controllers/faculty.controller.js</span>
+<span class="kw">const</span> getFacultyDashboard = <span class="fn">async</span>(req, res) => {
+  <span class="cm">// Returns: assigned courses, pending grades, student alerts</span>
+};
+<span class="kw">const</span> submitGrades = <span class="fn">async</span>(req, res) => {
+  <span class="cm">// Bulk grade entry: [{ studentId, courseId, grade, semester }]</span>
+  <span class="cm">// Validates: only faculty assigned to course can submit</span>
+};
+<span class="kw">const</span> trackStudentProgress = <span class="fn">async</span>(req, res) => {
+  <span class="cm">// Attendance, assignment completion, GPA trend</span>
+};`
+  },
+  {
+    id: 'reports',
+    icon: '📊',
+    title: 'Academic Reporting',
+    color: '#FFA657',
+    desc: 'Transcripts, enrollment stats, GPA reports, semester summaries.',
+    files: ['report.routes.js', 'report.controller.js', 'gradeCalc.js', 'transcripts.html', 'enrollment.html', 'stats.html'],
+    detail: `<span class="cm">// backend/routes/report.routes.js</span>
+<span class="cm">// All report routes require verifyToken middleware</span>
+router.<span class="fn">get</span>(<span class="str">'/reports/transcript/:studentId'</span>,  getTranscript);
+router.<span class="fn">get</span>(<span class="str">'/reports/enrollment'</span>,              getEnrollmentStats);
+router.<span class="fn">get</span>(<span class="str">'/reports/gpa/:studentId'</span>,         getGPAReport);
+router.<span class="fn">get</span>(<span class="str">'/reports/courses/summary'</span>,         getCourseSummary);
+
+<span class="cm">// utils/gradeCalc.js</span>
+<span class="kw">const</span> <span class="fn">calculateGPA</span> = (grades) =>
+  grades.<span class="fn">reduce</span>((sum, g) => sum + g.points, <span class="num">0</span>) / grades.length;`
+  },
+];
+
+const DB_TABLES = [
+  {
+    name: 'users', icon: '👤',
+    fields: [
+      { name: 'user_id', type: 'INT PK', cls: 'pk' },
+      { name: 'email', type: 'VARCHAR' },
+      { name: 'password_hash', type: 'VARCHAR' },
+      { name: 'role', type: 'ENUM' },
+      { name: 'created_at', type: 'TIMESTAMP' },
+    ]
+  },
+  {
+    name: 'students', icon: '🎓',
+    fields: [
+      { name: 'student_id', type: 'INT PK', cls: 'pk' },
+      { name: 'user_id', type: 'INT FK', cls: 'fk' },
+      { name: 'student_no', type: 'VARCHAR' },
+      { name: 'full_name', type: 'VARCHAR' },
+      { name: 'programme', type: 'VARCHAR' },
+      { name: 'year_of_study', type: 'INT' },
+      { name: 'status', type: 'ENUM' },
+    ]
+  },
+  {
+    name: 'faculty', icon: '👨‍🏫',
+    fields: [
+      { name: 'faculty_id', type: 'INT PK', cls: 'pk' },
+      { name: 'user_id', type: 'INT FK', cls: 'fk' },
+      { name: 'full_name', type: 'VARCHAR' },
+      { name: 'department', type: 'VARCHAR' },
+      { name: 'employee_no', type: 'VARCHAR' },
+    ]
+  },
+  {
+    name: 'courses', icon: '📚',
+    fields: [
+      { name: 'course_id', type: 'INT PK', cls: 'pk' },
+      { name: 'course_code', type: 'VARCHAR' },
+      { name: 'course_name', type: 'VARCHAR' },
+      { name: 'faculty_id', type: 'INT FK', cls: 'fk' },
+      { name: 'credits', type: 'INT' },
+      { name: 'semester', type: 'VARCHAR' },
+      { name: 'capacity', type: 'INT' },
+    ]
+  },
+  {
+    name: 'enrollments', icon: '📋',
+    fields: [
+      { name: 'enrollment_id', type: 'INT PK', cls: 'pk' },
+      { name: 'student_id', type: 'INT FK', cls: 'fk' },
+      { name: 'course_id', type: 'INT FK', cls: 'fk' },
+      { name: 'enrolled_at', type: 'TIMESTAMP' },
+      { name: 'status', type: 'ENUM' },
+    ]
+  },
+  {
+    name: 'grades', icon: '⭐',
+    fields: [
+      { name: 'grade_id', type: 'INT PK', cls: 'pk' },
+      { name: 'enrollment_id', type: 'INT FK', cls: 'fk' },
+      { name: 'grade_letter', type: 'CHAR' },
+      { name: 'grade_points', type: 'DECIMAL' },
+      { name: 'submitted_by', type: 'INT FK', cls: 'fk' },
+      { name: 'submitted_at', type: 'TIMESTAMP' },
+    ]
+  },
+  {
+    name: 'assignments', icon: '📝',
+    fields: [
+      { name: 'assignment_id', type: 'INT PK', cls: 'pk' },
+      { name: 'course_id', type: 'INT FK', cls: 'fk' },
+      { name: 'title', type: 'VARCHAR' },
+      { name: 'due_date', type: 'DATE' },
+      { name: 'max_score', type: 'INT' },
+    ]
+  },
+  {
+    name: 'schedules', icon: '🗓️',
+    fields: [
+      { name: 'schedule_id', type: 'INT PK', cls: 'pk' },
+      { name: 'course_id', type: 'INT FK', cls: 'fk' },
+      { name: 'day_of_week', type: 'ENUM' },
+      { name: 'start_time', type: 'TIME' },
+      { name: 'end_time', type: 'TIME' },
+      { name: 'room', type: 'VARCHAR' },
+    ]
+  },
+];
+
+const FLOW = [
+  { icon: '🌐', label: 'Browser', sub: 'fetch() / XHR' },
+  { icon: '🔀', label: 'Express Router', sub: '/api/v1/*' },
+  { icon: '🔐', label: 'Auth Middleware', sub: 'JWT verify' },
+  { icon: '🛡️', label: 'Role Guard', sub: 'admin|faculty|student' },
+  { icon: '⚙️', label: 'Controller', sub: 'business logic' },
+  { icon: '🗄️', label: 'MySQL', sub: 'query / ORM' },
+  { icon: '📦', label: 'JSON Response', sub: '200 / 4xx / 5xx' },
+];
+
+const ROLES = [
+  {
+    name: '🛡️ Admin',
+    color: '#F78166',
+    perms: [
+      { label: 'Manage all users & roles', ok: true },
+      { label: 'Create / delete courses', ok: true },
+      { label: 'View all reports', ok: true },
+      { label: 'Assign faculty to courses', ok: true },
+      { label: 'Register students', ok: true },
+      { label: 'Submit grades', warn: true },
+    ]
+  },
+  {
+    name: '👨‍🏫 Faculty',
+    color: '#D2A8FF',
+    perms: [
+      { label: 'View assigned courses', ok: true },
+      { label: 'Submit & edit grades', ok: true },
+      { label: 'Track student progress', ok: true },
+      { label: 'Upload course materials', ok: true },
+      { label: 'Manage other users', no: true },
+      { label: 'View all students', no: true },
+    ]
+  },
+  {
+    name: '🎓 Student',
+    color: '#58A6FF',
+    perms: [
+      { label: 'View own profile', ok: true },
+      { label: 'View enrolled courses', ok: true },
+      { label: 'View own grades', ok: true },
+      { label: 'View course materials', ok: true },
+      { label: 'Submit grades', no: true },
+      { label: 'Manage users', no: true },
+    ]
+  },
+];
+
+const BUILD_ORDER = [
+  { label: '1. DB Schema + Migrations', pct: 100, color: '#3FB950' },
+  { label: '2. Auth System (JWT + Roles)', pct: 100, color: '#3FB950' },
+  { label: '3. Student Management', pct: 85, color: '#58A6FF' },
+  { label: '4. Course Management', pct: 70, color: '#79C0FF' },
+  { label: '5. Faculty Portal', pct: 55, color: '#D2A8FF' },
+  { label: '6. Academic Reporting', pct: 40, color: '#FFA657' },
+  { label: '7. UI Polish + Testing', pct: 20, color: '#F78166' },
+];
+
+// ══════════════════════════════════════════
+//  RENDER FUNCTIONS
+// ══════════════════════════════════════════
+
+function fileIcon(item) {
+  if (item.type === 'folder') return '📁';
+  const name = item.name;
+  if (name.endsWith('.html')) return '🌐';
+  if (name.endsWith('.css'))  return '🎨';
+  if (name.endsWith('.js'))   return '⚡';
+  if (name.endsWith('.sql'))  return '🗄️';
+  if (name.endsWith('.md'))   return '📄';
+  if (name.endsWith('.json')) return '📦';
+  if (name.startsWith('.env')) return '🔑';
+  return '📄';
+}
+
+function buildTree(items) {
+  const ul = document.createElement('ul');
+  ul.className = 'tree';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'tree-item' + (item.type === 'folder' ? ' folder' : '') + (item.open ? ' open' : '');
+
+    const label = document.createElement('div');
+    label.className = 'tree-label';
+    label.innerHTML = `
+      <span class="icon">${fileIcon(item)}</span>
+      <span class="name">${item.name}</span>
+      ${item.tag ? `<span class="tag">${item.tag}</span>` : ''}
+    `;
+
+    li.appendChild(label);
+
+    if (item.children) {
+      const children = buildTree(item.children);
+      children.className = 'tree-children' + (item.open ? ' open' : '');
+      li.appendChild(children);
+
+      label.addEventListener('click', () => {
+        li.classList.toggle('open');
+        children.classList.toggle('open');
+      });
+    }
+
+    ul.appendChild(li);
+  });
+  return ul;
+}
+
+function renderModules() {
+  const grid = document.getElementById('modulesGrid');
+  MODULES.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+    card.style.setProperty('--card-accent', m.color);
+    card.innerHTML = `
+      <div class="card-icon">${m.icon}</div>
+      <div class="card-title">${m.title}</div>
+      <div class="card-desc">${m.desc}</div>
+      <div class="card-files">${m.files.map(f => `<span class="file-pill">${f}</span>`).join('')}</div>
+    `;
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.module-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      showDetail(m);
+    });
+    grid.appendChild(card);
+  });
+}
+
+function showDetail(m) {
+  const panel = document.getElementById('detailPanel');
+  const title = document.getElementById('detailTitle');
+  const code  = document.getElementById('detailCode');
+  title.innerHTML = `${m.icon} ${m.title} <span style="color:var(--muted);font-size:13px;font-weight:400">– Route / Controller Preview</span>`;
+  code.innerHTML = m.detail;
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderDB() {
+  const grid = document.getElementById('dbGrid');
+  DB_TABLES.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'db-table';
+    div.innerHTML = `
+      <div class="db-table-header"><span class="tbl-icon">${t.icon}</span>${t.name}</div>
+      ${t.fields.map(f => `
+        <div class="db-field">
+          <span class="${f.cls || ''}">${f.name}</span>
+          <span class="ftype">${f.type}</span>
+        </div>
+      `).join('')}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function renderFlow() {
+  const row = document.getElementById('flowRow');
+  FLOW.forEach((node, i) => {
+    const div = document.createElement('div');
+    div.className = 'flow-node';
+    div.innerHTML = `<div class="fn-icon">${node.icon}</div><div class="fn-label">${node.label}</div><div class="fn-sub">${node.sub}</div>`;
+    row.appendChild(div);
+    if (i < FLOW.length - 1) {
+      const arrow = document.createElement('div');
+      arrow.className = 'flow-arrow';
+      arrow.textContent = '→';
+      row.appendChild(arrow);
+    }
+  });
+}
+
+function renderRoles() {
+  const grid = document.getElementById('rolesGrid');
+  ROLES.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'role-card';
+    div.style.borderTopColor = r.color;
+    div.style.borderTopWidth = '2px';
+    div.innerHTML = `
+      <div class="role-name" style="color:${r.color}">${r.name}</div>
+      ${r.perms.map(p => `
+        <div class="role-perm">
+          <span class="dot ${p.no ? 'red' : p.warn ? 'yellow' : ''}"></span>
+          ${p.label}
+        </div>
+      `).join('')}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function renderProgress() {
+  const row = document.getElementById('progressRow');
+  BUILD_ORDER.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'progress-item';
+    div.innerHTML = `
+      <span class="progress-label">${item.label}</span>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" style="width:0%;background:${item.color}" data-pct="${item.pct}"></div>
+      </div>
+      <span class="progress-pct">${item.pct}%</span>
+    `;
+    row.appendChild(div);
+  });
+
+  // Animate bars after short delay
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+      bar.style.width = bar.dataset.pct + '%';
+    });
+  }, 300);
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const treeContainer = document.getElementById('fileTree');
+  FILE_TREE.forEach(item => {
+    const tree = buildTree([item]);
+    treeContainer.appendChild(tree.children[0]);
+  });
+
+  renderModules();
+  renderDB();
+  renderFlow();
+  renderRoles();
+  renderProgress();
+});
+</script>
+</body>
+</html>
